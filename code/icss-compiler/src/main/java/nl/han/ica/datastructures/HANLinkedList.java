@@ -11,7 +11,6 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
     private int size = 0;
 
 
-
     @Override
     public void addFirst(T value) {
         Node<T> node = new Node<>(value);
@@ -20,9 +19,15 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
             tail = node;
             return;
         }
-        tail.setNext(node);
-        tail = node;
+//        tail.setNext(node);
+//        tail = node;
+        node.setNext(head);
+        head = node;
         size++;
+    }
+
+    public Node<T> getHead() {
+        return head;
     }
 
     @Override
@@ -31,12 +36,16 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
         size = 0;
     }
 
+    public boolean isEmpty() {
+        return head == null;
+    }
+
     @Override
     public void insert(int pos, T value) {
         OwnGenericLinkedListIterator iterator = new OwnGenericLinkedListIterator();
         int index = 0;
 
-        Node<T> nToAdd= new Node<>(value);
+        Node<T> nToAdd = new Node<>(value);
 
         Node<T> nBefore = null;
         Node<T> nAfter = null;
@@ -56,10 +65,11 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
             index++;
         }
 
-        if(nBefore == null) throw new ArrayIndexOutOfBoundsException();
+        if (nBefore == null) throw new ArrayIndexOutOfBoundsException();
 
         nBefore.setNext(nToAdd);
         nToAdd.setNext(nAfter);
+        size++;
     }
 
     @Override
@@ -88,13 +98,13 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
             index++;
         }
 
-        if(nToRemove == null || nBefore == null) {
+        if (nToRemove == null || nBefore == null) {
             throw new ArrayIndexOutOfBoundsException();
         }
 
         nToRemove.setNext(null);
         nBefore.setNext(nAfter);
-
+        size--;
     }
 
     @Override
@@ -117,8 +127,12 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
     public void removeFirst() {
         if (head != null && head.getNext() != null) {
             head = head.getNext();
-            size--;
+        } else if(head != null && head.getNext() == null) {
+            head = null;
+        } else {
+            throw new ArrayIndexOutOfBoundsException();
         }
+        size--;
     }
 
 
