@@ -13,21 +13,28 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
 
     @Override
     public void addFirst(T value) {
+        add(value, true);
+    }
+
+    public void addLast(T value) {
+        add(value, false);
+    }
+
+    private void add(T value, boolean first) {
         Node<T> node = new Node<>(value);
         if (head == null) {
             head = node;
             tail = node;
             return;
         }
-//        tail.setNext(node);
-//        tail = node;
-        node.setNext(head);
-        head = node;
+        if (first) {
+            node.setNext(head);
+            head = node;
+        } else {
+            tail.setNext(node);
+            tail = node;
+        }
         size++;
-    }
-
-    public Node<T> getHead() {
-        return head;
     }
 
     @Override
@@ -127,7 +134,7 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
     public void removeFirst() {
         if (head != null && head.getNext() != null) {
             head = head.getNext();
-        } else if(head != null && head.getNext() == null) {
+        } else if (head != null && head.getNext() == null) {
             head = null;
         } else {
             throw new ArrayIndexOutOfBoundsException();
