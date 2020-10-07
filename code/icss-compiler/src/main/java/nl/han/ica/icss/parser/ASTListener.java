@@ -16,6 +16,7 @@ import nl.han.ica.icss.ast.selectors.TagSelector;
 /**
  * This class extracts the ICSS Abstract Syntax Tree from the Antlr Parse tree.
  */
+
 public class ASTListener extends ICSSBaseListener {
 	
 	//Accumulator attributes:

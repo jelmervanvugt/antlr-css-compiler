@@ -31,7 +31,7 @@ CAPITAL_IDENT: [A-Z] [A-Za-z0-9_]*;
 //All whitespace is skipped
 WS: [ \t\r\n]+ -> skip;
 
-//
+//Generic
 OPEN_BRACE: '{';
 CLOSE_BRACE: '}';
 SEMICOLON: ';';
@@ -41,9 +41,32 @@ MIN: '-';
 MUL: '*';
 ASSIGNMENT_OPERATOR: ':=';
 
-
-
-
 //--- PARSER: ---
-stylesheet: EOF;
+stylesheet: variableDeclaration* stylerule* EOF;
+
+//General
+name: LOWER_IDENT | CAPITAL_IDENT;
+expressionType: PIXELSIZE | PERCENTAGE | COLOR | SCALAR | TRUE | FALSE | name;
+operationType: PLUS | MIN | MUL;
+
+//Stylerule
+styleruleIdentifier: (ID_IDENT | CLASS_IDENT)? | name;
+styleruleContent: (variableReference | ifClause)*;
+stylerule: styleruleIdentifier OPEN_BRACE styleruleContent CLOSE_BRACE;
+
+//Variables
+variableDeclaration: name ASSIGNMENT_OPERATOR expressionType SEMICOLON;
+variableReference: name COLON expressionType (operationType expressionType)* SEMICOLON;
+
+//If else statement
+
+ifClause: IF BOX_BRACKET_OPEN name BOX_BRACKET_CLOSE OPEN_BRACE ifClauseContent CLOSE_BRACE (ELSE OPEN_BRACE ifClauseContent CLOSE_BRACE)?;
+ifClauseContent: (variableReference | ifClause)*;
+
+
+
+
+
+
+
 
