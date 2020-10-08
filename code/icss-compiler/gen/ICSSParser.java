@@ -1,5 +1,4 @@
-// Generated from nl\han\ica\icss\parser\ICSS.g4 by ANTLR 4.8
-package nl.han.ica.icss.parser;
+// Generated from C:/Users/jelmer van vugt/Documents/GitHub/antlr-css-compiler/code/icss-compiler/src/main/antlr4/nl/han/ica/icss/parser\ICSS.g4 by ANTLR 4.8
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -128,6 +127,11 @@ public class ICSSParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ICSSListener ) ((ICSSListener)listener).exitStylesheet(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ICSSVisitor ) return ((ICSSVisitor<? extends T>)visitor).visitStylesheet(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final StylesheetContext stylesheet() throws RecognitionException {
@@ -198,6 +202,11 @@ public class ICSSParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ICSSListener ) ((ICSSListener)listener).exitName(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ICSSVisitor ) return ((ICSSVisitor<? extends T>)visitor).visitName(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final NameContext name() throws RecognitionException {
@@ -251,6 +260,11 @@ public class ICSSParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ICSSListener ) ((ICSSListener)listener).exitExpressionType(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ICSSVisitor ) return ((ICSSVisitor<? extends T>)visitor).visitExpressionType(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -342,6 +356,11 @@ public class ICSSParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ICSSListener ) ((ICSSListener)listener).exitOperationType(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ICSSVisitor ) return ((ICSSVisitor<? extends T>)visitor).visitOperationType(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final OperationTypeContext operationType() throws RecognitionException {
@@ -391,6 +410,11 @@ public class ICSSParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ICSSListener ) ((ICSSListener)listener).exitStyleruleIdentifier(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ICSSVisitor ) return ((ICSSVisitor<? extends T>)visitor).visitStyleruleIdentifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -475,6 +499,11 @@ public class ICSSParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ICSSListener ) ((ICSSListener)listener).exitStyleruleContent(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ICSSVisitor ) return ((ICSSVisitor<? extends T>)visitor).visitStyleruleContent(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final StyleruleContentContext styleruleContent() throws RecognitionException {
@@ -547,6 +576,11 @@ public class ICSSParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ICSSListener ) ((ICSSListener)listener).exitStylerule(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ICSSVisitor ) return ((ICSSVisitor<? extends T>)visitor).visitStylerule(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final StyleruleContext stylerule() throws RecognitionException {
@@ -596,6 +630,11 @@ public class ICSSParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ICSSListener ) ((ICSSListener)listener).exitVariableDeclaration(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ICSSVisitor ) return ((ICSSVisitor<? extends T>)visitor).visitVariableDeclaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -655,6 +694,11 @@ public class ICSSParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ICSSListener ) ((ICSSListener)listener).exitVariableReference(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ICSSVisitor ) return ((ICSSVisitor<? extends T>)visitor).visitVariableReference(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -736,6 +780,11 @@ public class ICSSParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ICSSListener ) ((ICSSListener)listener).exitIfClause(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ICSSVisitor ) return ((ICSSVisitor<? extends T>)visitor).visitIfClause(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final IfClauseContext ifClause() throws RecognitionException {
@@ -812,6 +861,11 @@ public class ICSSParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ICSSListener ) ((ICSSListener)listener).exitIfClauseContent(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ICSSVisitor ) return ((ICSSVisitor<? extends T>)visitor).visitIfClauseContent(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 

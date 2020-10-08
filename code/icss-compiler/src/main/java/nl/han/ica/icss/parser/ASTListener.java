@@ -20,6 +20,7 @@ import nl.han.ica.icss.ast.selectors.TagSelector;
 public class ASTListener extends ICSSBaseListener {
 	
 	//Accumulator attributes:
+
 	private AST ast;
 
 	//Use this to keep track of the parent nodes when recursively traversing the ast
@@ -32,5 +33,12 @@ public class ASTListener extends ICSSBaseListener {
     public AST getAST() {
         return ast;
     }
+
+
+//	@Override public void enterExpressionType(ICSSParser.ExpressionTypeContext ctx) {
+//		System.out.println(ctx.getChild(0));
+//	}
+
+
     
 }

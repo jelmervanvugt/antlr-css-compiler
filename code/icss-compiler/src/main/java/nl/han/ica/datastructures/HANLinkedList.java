@@ -25,14 +25,14 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
         if (head == null) {
             head = node;
             tail = node;
-            return;
-        }
-        if (first) {
-            node.setNext(head);
-            head = node;
         } else {
-            tail.setNext(node);
-            tail = node;
+            if (first) {
+                node.setNext(head);
+                head = node;
+            } else {
+                tail.setNext(node);
+                tail = node;
+            }
         }
         size++;
     }
@@ -49,6 +49,14 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
 
     @Override
     public void insert(int pos, T value) {
+        if (pos == 0) {
+            addFirst(value);
+            return;
+        } else if (pos == size - 1) {
+            addLast(value);
+            return;
+        }
+
         OwnGenericLinkedListIterator iterator = new OwnGenericLinkedListIterator();
         int index = 0;
 
@@ -57,18 +65,20 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
         Node<T> nBefore = null;
         Node<T> nAfter = null;
 
-        while (index < pos) {
-            if (iterator.hasNext()) {
-                iterator.next();
-            } else {
-                throw new ArrayIndexOutOfBoundsException();
-            }
+        while (index <= pos) {
 
             if (index == pos - 1) {
                 nBefore = iterator.current;
             } else if (index == pos) {
                 nAfter = iterator.current;
             }
+
+            if (iterator.hasNext()) {
+                iterator.next();
+            } else {
+                throw new ArrayIndexOutOfBoundsException();
+            }
+
             index++;
         }
 
@@ -81,17 +91,22 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
 
     @Override
     public void delete(int pos) {
+        if (pos == 0) {
+            removeFirst();
+            return;
+        }
+
         OwnGenericLinkedListIterator iterator = new OwnGenericLinkedListIterator();
         int index = 0;
 
-        Node<T> nBefore = null;
+        Node<T> nBefore = iterator.current;
         Node<T> nToRemove = null;
         Node<T> nAfter = null;
 
-        while (index < pos + 1) {
-            if (iterator.hasNext()) {
-                iterator.next();
-            } else {
+        while (index < pos) {
+            index++;
+            if (iterator.hasNext()) iterator.next();
+            else {
                 throw new ArrayIndexOutOfBoundsException();
             }
 
@@ -99,25 +114,29 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
                 nBefore = iterator.current;
             } else if (index == pos) {
                 nToRemove = iterator.current;
-            } else if (index == pos + 1) {
-                nAfter = iterator.current;
             }
-            index++;
         }
 
-        if (nToRemove == null || nBefore == null) {
+        if (iterator.hasNext()) nAfter = iterator.current.getNext();
+
+        if (nBefore == null || nToRemove == null) {
             throw new ArrayIndexOutOfBoundsException();
         }
 
-        nToRemove.setNext(null);
-        nBefore.setNext(nAfter);
+        if (nAfter == null) {
+            tail = nBefore;
+            tail.setNext(null);
+        } else {
+            nToRemove.setNext(null);
+            nBefore.setNext(nAfter);
+        }
         size--;
     }
 
     @Override
     public T get(int pos) {
         OwnGenericLinkedListIterator iterator = new OwnGenericLinkedListIterator();
-        T value = null;
+        T value = head.getValue();
         int i = 0;
         while (i < pos) {
             if (iterator.hasNext()) {
@@ -142,7 +161,6 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
         size--;
     }
 
-
     @Override
     public T getFirst() {
         return head.getValue();
@@ -165,25 +183,21 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
 
         @Override
         public boolean hasNext() {
-            if (current == null && head != null) {
-                return true;
-            } else if (current != null) {
+            if (current == null) {
+                return false;
+            } else {
                 return current.getNext() != null;
             }
-            return false;
         }
 
         @Override
         public T next() {
-            if (current == null && head != null) {
-                current = head;
-                return head.getValue();
-            } else if (current != null) {
-                current = current.getNext();
-                return current.getValue();
+            if (current == null || current.getNext() == null) {
+                throw new NoSuchElementException();
             }
-            throw new NoSuchElementException();
+            current = current.getNext();
+            return current.getValue();
         }
-    }
 
+    }
 }
