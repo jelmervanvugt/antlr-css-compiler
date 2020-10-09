@@ -42,26 +42,35 @@ MUL: '*';
 ASSIGNMENT_OPERATOR: ':=';
 
 //--- PARSER: ---
-stylesheet: variableDeclaration* stylerule* EOF;
-
-//General
-name: LOWER_IDENT | CAPITAL_IDENT;
-expressionType: PIXELSIZE | PERCENTAGE | COLOR | SCALAR | TRUE | FALSE | name;
-operationType: PLUS | MIN | MUL;
+stylesheet: styleRule+  EOF;
 
 //Stylerule
-styleruleIdentifier: (ID_IDENT | CLASS_IDENT)? | name;
-styleruleContent: (variableReference | ifClause)*;
-stylerule: styleruleIdentifier OPEN_BRACE styleruleContent CLOSE_BRACE;
+styleRule: selector OPEN_BRACE declaration+ CLOSE_BRACE | variableAssignment;
+selector: tagSelector | classSelector | idSelector;
+tagSelector: LOWER_IDENT;
+classSelector: CLASS_IDENT;
+idSelector: ID_IDENT;
 
 //Variables
-variableDeclaration: name ASSIGNMENT_OPERATOR expressionType SEMICOLON;
-variableReference: name COLON expressionType (operationType expressionType)* SEMICOLON;
+propertyName: LOWER_IDENT;
+declaration: propertyName COLON expression+ SEMICOLON | ifClause | elseClause;
 
-//If else statement
+//Values
+value: boolLiteral | colorLiteral | percentageLiteral | pixelLiteral | scalarLiteral | variableReference;
+boolLiteral: TRUE | FALSE;
+colorLiteral: COLOR;
+percentageLiteral: PERCENTAGE;
+pixelLiteral: PIXELSIZE;
+scalarLiteral: SCALAR;
+variableAssignment: CAPITAL_IDENT ASSIGNMENT_OPERATOR expression+ SEMICOLON;
+variableReference: CAPITAL_IDENT;
 
-ifClause: IF BOX_BRACKET_OPEN name BOX_BRACKET_CLOSE OPEN_BRACE ifClauseContent CLOSE_BRACE (ELSE OPEN_BRACE ifClauseContent CLOSE_BRACE)?;
-ifClauseContent: (variableReference | ifClause)*;
+expression: operator value operator | value operator value | value;
+operator: PLUS | MIN | MUL;
+
+//If clause
+ifClause: IF BOX_BRACKET_OPEN variableReference BOX_BRACKET_CLOSE OPEN_BRACE declaration+ CLOSE_BRACE;
+elseClause: ELSE OPEN_BRACE declaration+ CLOSE_BRACE;
 
 
 

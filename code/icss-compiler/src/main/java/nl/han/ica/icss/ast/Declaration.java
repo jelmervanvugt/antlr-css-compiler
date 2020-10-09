@@ -7,16 +7,19 @@ import java.util.Objects;
  * A Declaration defines a style property. Declarations are things like "width: 100px"
  */
 public class Declaration extends ASTNode {
+
 	public PropertyName property;
 	public Expression expression;
 
 	public Declaration() {
 		super();
 	}
+
 	public Declaration(String property) {
 		super();
 		this.property = new PropertyName(property);
 	}
+
 	@Override
 	public String getNodeLabel() {
 	    return "Declaration";
