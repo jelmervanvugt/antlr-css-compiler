@@ -123,7 +123,7 @@ public class ASTListener extends ICSSBaseListener {
     }
 
 
-    //Variablereference
+    //Variable reference
     @Override public void enterVariableReference(ICSSParser.VariableReferenceContext ctx) {
         currentContainer.peek().addChild(new VariableReference(ctx.getText()));
     }
@@ -148,7 +148,6 @@ public class ASTListener extends ICSSBaseListener {
     @Override public void enterScalarLiteral(ICSSParser.ScalarLiteralContext ctx) {
         currentContainer.peek().addChild(new ScalarLiteral(ctx.getText()));
     }
-
 
 
 }

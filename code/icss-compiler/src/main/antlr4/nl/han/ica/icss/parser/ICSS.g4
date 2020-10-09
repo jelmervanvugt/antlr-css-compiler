@@ -42,10 +42,10 @@ MUL: '*';
 ASSIGNMENT_OPERATOR: ':=';
 
 //--- PARSER: ---
-stylesheet: styleRule+  EOF;
+stylesheet: variableAssignment* styleRule* EOF;
 
 //Stylerule
-styleRule: selector OPEN_BRACE declaration+ CLOSE_BRACE | variableAssignment;
+styleRule: selector OPEN_BRACE declaration+ CLOSE_BRACE;
 selector: tagSelector | classSelector | idSelector;
 tagSelector: LOWER_IDENT;
 classSelector: CLASS_IDENT;
@@ -62,9 +62,12 @@ colorLiteral: COLOR;
 percentageLiteral: PERCENTAGE;
 pixelLiteral: PIXELSIZE;
 scalarLiteral: SCALAR;
-variableAssignment: CAPITAL_IDENT ASSIGNMENT_OPERATOR expression+ SEMICOLON;
+
+//Variable assignment
+variableAssignment: variableReference ASSIGNMENT_OPERATOR expression+ SEMICOLON;
 variableReference: CAPITAL_IDENT;
 
+//Expression
 expression: operator value operator | value operator value | value;
 operator: PLUS | MIN | MUL;
 
