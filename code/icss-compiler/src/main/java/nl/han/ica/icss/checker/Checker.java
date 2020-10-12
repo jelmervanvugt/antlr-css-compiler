@@ -18,22 +18,63 @@ public class Checker {
     public void check(AST ast) {
         variableTypes = new HANLinkedList<>();
 
-        for (ASTNode node : ast.root.getChildren()) {
-            setVariableAssignment(node);
+        //Finds instances of VariableAssignment and populates HashMap
+        setVariableAssignment(ast.root);
+
+        //Checks validity operations
+        checkValidityOperations(ast.root);
+
+    }
+
+    private void setVariableAssignment(ASTNode root) {
+        for (ASTNode node : root.getChildren()) {
+            if (node instanceof VariableAssignment) {
+                String propertyName = ((VariableAssignment) node).name.name;
+                ExpressionType expressionType = getExpressionType(((VariableAssignment) node).expression);
+                HashMap<String, ExpressionType> hashMap = new HashMap<>();
+                hashMap.put(propertyName, expressionType);
+                variableTypes.addLast(hashMap);
+            }
         }
     }
 
-    //Function which finds instances of VariableAssignment
-    private void setVariableAssignment(ASTNode node) {
-        if (node instanceof VariableAssignment) {
-            String propertyName = ((VariableAssignment) node).name.name;
-            ExpressionType expressionType = getExpressionType(((VariableAssignment) node).expression);
-            HashMap<String, ExpressionType> hashMap = new HashMap<>();
-            hashMap.put(propertyName, expressionType);
-            variableTypes.addLast(hashMap);
+
+
+    //Recursive functions which finds all ASTNodes which are Operations
+    private void checkValidityOperations(ASTNode node) {
+        if(node instanceof Operation) {
+            checkIfExpressionTypesAreEqual((Operation) node);
         }
     }
 
+    private void checkIfExpressionTypesAreEqual(Operation operation) {
+
+        ExpressionType exTypeLeft = null;
+        ExpressionType exTypeRight = null;
+
+        if(operation.lhs instanceof VariableReference) {
+            exTypeLeft = variableTypes.getFirst().get(((VariableReference) operation.lhs).name);
+        } else {
+            exTypeLeft = getExpressionType(operation.lhs);
+        }
+
+        if(operation.rhs instanceof VariableReference) {
+            exTypeRight = variableTypes.getFirst().get(((VariableReference) operation.rhs).name);
+        } else {
+            exTypeRight = getExpressionType(operation.rhs);
+        }
+
+
+        //logica
+        
+
+    }
+
+
+    //Supporting functions
+    /*--------------------------------------------------------*/
+
+    //Returns ExpressionType based on Literal
     private ExpressionType getExpressionType(Expression expression) {
         if (expression instanceof BoolLiteral) {
             return BOOL;
@@ -49,66 +90,4 @@ public class Checker {
             return UNDEFINED;
         }
     }
-
-
-
-
-
-
-
-
-
-
-//    private void checkStylesheet(Stylesheet sheet) {
-//        for (ASTNode child : sheet.getChildren()) {
-//            if (child instanceof VariableAssignment) {
-//                checkVariableAssignment((VariableAssignment) child);
-//            } else {
-//                checkStyleRule((Stylerule) child);
-//            }
-//        }
-//    }
-//
-//
-//    //Check children of stylesheet
-//    private void checkStyleRule(Stylerule styleRule) {
-//        for (ASTNode child : styleRule.getChildren()) {
-//            if (child instanceof Declaration) {
-//                checkDeclaration((Declaration) child);
-//            } else if (child instanceof IfClause) {
-//                checkIfClause((IfClause) child);
-//            }
-//        }
-//    }
-//
-//    private void checkVariableAssignment(VariableAssignment variableAssignment) {
-//            //Checking if third child is an expression
-//            for(ASTNode node : variableAssignment.getChildren()) {
-//                if(node.)
-//            }
-//    }
-//
-//    //Check children of stylerule
-//    private void checkDeclaration(Declaration declaration) {
-//
-//    }
-//
-//    private void checkIfClause(IfClause ifClause) {
-//
-//    }
-//
-//
-//
-//
-//
-//
-//    //Iterates through variableTypes LinkedList and returns ExpressionType of variable
-//    private ExpressionType getVariableValue(VariableReference variableReference) {
-//        for (HashMap<String, ExpressionType> map : variableTypes) {
-//            if (map.containsKey(variableReference.name)) {
-//                return map.get(variableReference.name);
-//            }
-//        }
-//        return null;
-//    }
 }
