@@ -31,6 +31,7 @@ nl\han\ica\icss\ast\ElseClause.class
 nl\han\ica\icss\transforms\RemoveIf.class
 nl\han\ica\icss\gui\Main.class
 nl\han\ica\icss\ast\literals\ScalarLiteral.class
+nl\han\ica\icss\checker\errors\OperationTypeException.class
 nl\han\ica\icss\parser\ICSSParser$PixelLiteralContext.class
 nl\han\ica\datastructures\IHANStack.class
 nl\han\ica\icss\parser\ICSSParser$StylesheetContext.class
@@ -70,6 +71,7 @@ nl\han\ica\icss\parser\ASTListener.class
 nl\han\ica\icss\parser\ICSSParser$VariableAssignmentContext.class
 nl\han\ica\icss\parser\ICSSParser$ExpressionContext.class
 nl\han\ica\datastructures\IHANQueue.class
+nl\han\ica\icss\checker\errors\VariableUndefinedException.class
 nl\han\ica\icss\ast\selectors\IdSelector.class
 nl\han\ica\Exceptions\StackIsEmptyException.class
 nl\han\ica\icss\ast\operations\SubtractOperation.class
