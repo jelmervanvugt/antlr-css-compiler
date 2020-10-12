@@ -68,9 +68,7 @@ variableAssignment: variableReference ASSIGNMENT_OPERATOR expression+ SEMICOLON;
 variableReference: CAPITAL_IDENT;
 
 //Expression
-expression: expression mult expression | expression subadd expression | value;
-mult: MUL;
-subadd: PLUS | MIN;
+expression: value | expression MUL expression | expression (PLUS | MIN) expression;
 
 //If clause
 ifClause: IF BOX_BRACKET_OPEN variableReference BOX_BRACKET_CLOSE OPEN_BRACE declaration+ CLOSE_BRACE;
