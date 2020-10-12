@@ -1,6 +1,8 @@
 package nl.han.ica.icss.parser;
 
 import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 import nl.han.ica.datastructures.HANStack;
@@ -63,32 +65,38 @@ public class ASTListener extends ICSSBaseListener {
     }
 
     //Selector of stylerule
-    @Override public void enterTagSelector(ICSSParser.TagSelectorContext ctx) {
+    @Override
+    public void enterTagSelector(ICSSParser.TagSelectorContext ctx) {
         ASTNode tagSelector = new TagSelector(ctx.getText());
         currentContainer.push(tagSelector);
     }
 
-    @Override public void exitTagSelector(ICSSParser.TagSelectorContext ctx) {
+    @Override
+    public void exitTagSelector(ICSSParser.TagSelectorContext ctx) {
         ASTNode tagSelector = currentContainer.pop();
         currentContainer.peek().addChild(tagSelector);
     }
 
-    @Override public void enterClassSelector(ICSSParser.ClassSelectorContext ctx) {
+    @Override
+    public void enterClassSelector(ICSSParser.ClassSelectorContext ctx) {
         ASTNode classSelector = new ClassSelector(ctx.getText());
         currentContainer.push(classSelector);
     }
 
-    @Override public void exitClassSelector(ICSSParser.ClassSelectorContext ctx) {
+    @Override
+    public void exitClassSelector(ICSSParser.ClassSelectorContext ctx) {
         ASTNode classSelector = currentContainer.pop();
         currentContainer.peek().addChild(classSelector);
     }
 
-    @Override public void enterIdSelector(ICSSParser.IdSelectorContext ctx) {
+    @Override
+    public void enterIdSelector(ICSSParser.IdSelectorContext ctx) {
         ASTNode idSelector = new IdSelector(ctx.getText());
         currentContainer.push(idSelector);
     }
 
-    @Override public void exitIdSelector(ICSSParser.IdSelectorContext ctx) {
+    @Override
+    public void exitIdSelector(ICSSParser.IdSelectorContext ctx) {
         ASTNode idSelector = currentContainer.pop();
         currentContainer.peek().addChild(idSelector);
     }
@@ -112,42 +120,68 @@ public class ASTListener extends ICSSBaseListener {
         currentContainer.peek().addChild(new PropertyName(ctx.getText()));
     }
 
-    @Override public void enterVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
+    @Override
+    public void enterVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
         ASTNode variableAssignment = new VariableAssignment();
         currentContainer.push(variableAssignment);
     }
 
-    @Override public void exitVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
+    @Override
+    public void exitVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
         ASTNode variableAssignment = currentContainer.pop();
         currentContainer.peek().addChild(variableAssignment);
     }
 
 
     //Variable reference
-    @Override public void enterVariableReference(ICSSParser.VariableReferenceContext ctx) {
+    @Override
+    public void enterVariableReference(ICSSParser.VariableReferenceContext ctx) {
         currentContainer.peek().addChild(new VariableReference(ctx.getText()));
     }
 
-    //Literals
-    @Override public void enterBoolLiteral(ICSSParser.BoolLiteralContext ctx) {
-        currentContainer.peek().addChild(new BoolLiteral(ctx.getText()));
-    }
 
-    @Override public void enterColorLiteral(ICSSParser.ColorLiteralContext ctx) {
-        currentContainer.peek().addChild(new ColorLiteral(ctx.getText()));
-    }
+    //Expression
+    public void exitExpression(ICSSParser.ExpressionContext ctx) {
+        Expression expression = null;
+        if (ctx.getChildCount() == 1) {
+            if (Pattern.matches("[0-9]+px", ctx.getText())) {
+                expression = new PixelLiteral(ctx.getChild(0).getText());
+            }
+            if (ctx.getText().matches("[0-9]+ '%'")) {
+                expression = new PercentageLiteral(ctx.getChild(0).getText());
+            }
+            if (ctx.getText().matches("[A-Z] [A-Za-z0-9_]*")) {
+                expression = new VariableReference(ctx.getChild(0).getText());
+            }
+            if (ctx.getText().matches("[0-9]+")) {
+                expression = new ScalarLiteral(ctx.getChild(0).getText());
+            }
+            if (ctx.getText().matches("'FALSE'") || ctx.getText().matches("'TRUE'")) {
+                expression = new BoolLiteral(ctx.getChild(0).getText());
+            }
+            if (ctx.getText().matches("'#' [0-9a-f] [0-9a-f] [0-9a-f] [0-9a-f] [0-9a-f] [0-9a-f]")) {
+                expression = new ColorLiteral(ctx.getChild(0).getText());
+            }
+            currentContainer.push(expression);
+        }
 
-    @Override public void enterPercentageLiteral(ICSSParser.PercentageLiteralContext ctx) {
-        currentContainer.peek().addChild(new PercentageLiteral(ctx.getText()));
-    }
+        if (ctx.getChildCount() == 3) {
+            if (ctx.getChild(1).getText().equals("*")) {
+                expression = new MultiplyOperation();
+            }
+            if (ctx.getChild(1).getText().equals("+")) {
+                expression = new AddOperation();
+            }
+            if (ctx.getChild(1).getText().equals("-")) {
+                expression = new SubtractOperation();
+            }
 
-    @Override public void enterPixelLiteral(ICSSParser.PixelLiteralContext ctx) {
-        currentContainer.peek().addChild(new PixelLiteral(ctx.getText()));
+            ASTNode astNode1 = currentContainer.pop();
+            expression.addChild(astNode1);
+            ASTNode astNode2 = currentContainer.pop();
+            expression.addChild(astNode2);
+            currentContainer.peek().addChild(expression);
+        }
     }
-
-    @Override public void enterScalarLiteral(ICSSParser.ScalarLiteralContext ctx) {
-        currentContainer.peek().addChild(new ScalarLiteral(ctx.getText()));
-    }
-
 
 }

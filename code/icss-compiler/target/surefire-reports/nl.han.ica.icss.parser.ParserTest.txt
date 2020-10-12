@@ -1,0 +1,24 @@
+-------------------------------------------------------------------------------
+Test set: nl.han.ica.icss.parser.ParserTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 4, Skipped: 0, Time elapsed: 0.097 s <<< FAILURE! - in nl.han.ica.icss.parser.ParserTest
+testParseLevel0  Time elapsed: 0.068 s  <<< ERROR!
+java.lang.ClassCastException: class nl.han.ica.icss.ast.Stylerule cannot be cast to class nl.han.ica.icss.ast.Stylesheet (nl.han.ica.icss.ast.Stylerule and nl.han.ica.icss.ast.Stylesheet are in unnamed module of loader 'app')
+	at nl.han.ica.icss.parser.ParserTest.parseTestFile(ParserTest.java:48)
+	at nl.han.ica.icss.parser.ParserTest.testParseLevel0(ParserTest.java:59)
+
+testParseLevel1  Time elapsed: 0.005 s  <<< ERROR!
+java.lang.ClassCastException: class nl.han.ica.icss.ast.Stylerule cannot be cast to class nl.han.ica.icss.ast.Stylesheet (nl.han.ica.icss.ast.Stylerule and nl.han.ica.icss.ast.Stylesheet are in unnamed module of loader 'app')
+	at nl.han.ica.icss.parser.ParserTest.parseTestFile(ParserTest.java:48)
+	at nl.han.ica.icss.parser.ParserTest.testParseLevel1(ParserTest.java:66)
+
+testParseLevel2  Time elapsed: 0.005 s  <<< ERROR!
+java.lang.ClassCastException: class nl.han.ica.icss.ast.Stylerule cannot be cast to class nl.han.ica.icss.ast.Stylesheet (nl.han.ica.icss.ast.Stylerule and nl.han.ica.icss.ast.Stylesheet are in unnamed module of loader 'app')
+	at nl.han.ica.icss.parser.ParserTest.parseTestFile(ParserTest.java:48)
+	at nl.han.ica.icss.parser.ParserTest.testParseLevel2(ParserTest.java:73)
+
+testParseLevel3  Time elapsed: 0.011 s  <<< ERROR!
+java.lang.ClassCastException: class nl.han.ica.icss.ast.Declaration cannot be cast to class nl.han.ica.icss.ast.Stylesheet (nl.han.ica.icss.ast.Declaration and nl.han.ica.icss.ast.Stylesheet are in unnamed module of loader 'app')
+	at nl.han.ica.icss.parser.ParserTest.parseTestFile(ParserTest.java:48)
+	at nl.han.ica.icss.parser.ParserTest.testParseLevel3(ParserTest.java:80)
+

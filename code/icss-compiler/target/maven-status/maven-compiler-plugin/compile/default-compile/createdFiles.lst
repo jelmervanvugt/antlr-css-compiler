@@ -1,3 +1,4 @@
+nl\han\ica\icss\parser\ICSSParser$MultContext.class
 nl\han\ica\icss\ast\operations\AddOperation.class
 nl\han\ica\icss\ast\Stylesheet.class
 nl\han\ica\icss\transforms\Transform.class
@@ -53,6 +54,7 @@ nl\han\ica\icss\gui\OutputPane.class
 nl\han\ica\icss\parser\ICSSParser$ElseClauseContext.class
 nl\han\ica\icss\parser\ICSSParser$ColorLiteralContext.class
 nl\han\ica\icss\gui\MainGui$4.class
+nl\han\ica\icss\parser\ICSSParser$SubaddContext.class
 nl\han\ica\icss\ast\Declaration.class
 nl\han\ica\icss\generator\Generator.class
 nl\han\ica\icss\parser\ICSSParser.class
@@ -72,7 +74,6 @@ nl\han\ica\icss\parser\ICSSParser$ExpressionContext.class
 nl\han\ica\datastructures\IHANQueue.class
 nl\han\ica\icss\ast\selectors\IdSelector.class
 nl\han\ica\Exceptions\StackIsEmptyException.class
-nl\han\ica\icss\parser\ICSSParser$OperatorContext.class
 nl\han\ica\icss\ast\operations\SubtractOperation.class
 nl\han\ica\datastructures\IHANLinkedList.class
 nl\han\ica\icss\parser\ICSSBaseListener.class

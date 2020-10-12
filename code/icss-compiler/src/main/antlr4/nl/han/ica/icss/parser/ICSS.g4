@@ -45,7 +45,7 @@ ASSIGNMENT_OPERATOR: ':=';
 stylesheet: variableAssignment* styleRule* EOF;
 
 //Stylerule
-styleRule: selector OPEN_BRACE declaration+ CLOSE_BRACE;
+styleRule: selector OPEN_BRACE (declaration | ifClause)* CLOSE_BRACE;
 selector: tagSelector | classSelector | idSelector;
 tagSelector: LOWER_IDENT;
 classSelector: CLASS_IDENT;
@@ -53,7 +53,7 @@ idSelector: ID_IDENT;
 
 //Variables
 propertyName: LOWER_IDENT;
-declaration: propertyName COLON expression+ SEMICOLON | ifClause | elseClause;
+declaration: propertyName COLON expression SEMICOLON | ifClause | elseClause;
 
 //Values
 value: boolLiteral | colorLiteral | percentageLiteral | pixelLiteral | scalarLiteral | variableReference;
@@ -68,8 +68,9 @@ variableAssignment: variableReference ASSIGNMENT_OPERATOR expression+ SEMICOLON;
 variableReference: CAPITAL_IDENT;
 
 //Expression
-expression: operator value operator | value operator value | value;
-operator: PLUS | MIN | MUL;
+expression: expression mult expression | expression subadd expression | value;
+mult: MUL;
+subadd: PLUS | MIN;
 
 //If clause
 ifClause: IF BOX_BRACKET_OPEN variableReference BOX_BRACKET_CLOSE OPEN_BRACE declaration+ CLOSE_BRACE;

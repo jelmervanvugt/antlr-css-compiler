@@ -220,13 +220,25 @@ public class ICSSBaseListener implements ICSSListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterOperator(ICSSParser.OperatorContext ctx) { }
+	@Override public void enterMult(ICSSParser.MultContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitOperator(ICSSParser.OperatorContext ctx) { }
+	@Override public void exitMult(ICSSParser.MultContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSubadd(ICSSParser.SubaddContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSubadd(ICSSParser.SubaddContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
