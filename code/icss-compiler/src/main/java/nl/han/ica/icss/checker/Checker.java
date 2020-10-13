@@ -20,25 +20,14 @@ public class Checker {
     public void check(AST ast) {
         variableTypes = new HANLinkedList<>();
 
-        //Finds instances of VariableAssignment and populates HashMap
-        setVariableAssignment(ast.root);
-
-        //Checks validity operations
-        checkValidityDeclarations(ast.root);
-
-    }
-
-
-
-    private void checkValidityDeclarations(ASTNode root) {
         //Gets all ASTNode with instance of Declaration
         ArrayList<Declaration> declarations = getAllDeclarations(root);
 
         //Removes all declarations from ArrayList containing either a Color or Boolean and sets error on concerned node
         declarations.removeIf(node -> checkValidityLiteralsInExpression((Operation) node.expression));
 
-
     }
+    
 
     //Returns ArrayList containing all Declaration nodes within AST
     private ArrayList<Declaration> getAllDeclarations(ASTNode node) {
