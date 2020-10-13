@@ -27,7 +27,7 @@ public class Checker {
         declarations.removeIf(node ->
         {
             if (node.expression instanceof Operation) {
-                return checkValidityLiteralsInExpression((Operation) node.expression);
+                return !checkValidityLiteralsInExpression((Operation) node.expression);
             }
             return true;
         });
