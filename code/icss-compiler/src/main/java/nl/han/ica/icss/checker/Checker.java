@@ -8,6 +8,8 @@ import static nl.han.ica.icss.ast.types.ExpressionType.*;
 
 import nl.han.ica.icss.ast.types.ExpressionType;
 
+import java.sql.SQLOutput;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -22,8 +24,58 @@ public class Checker {
         setVariableAssignment(ast.root);
 
         //Checks validity operations
-        checkValidityOperations(ast.root);
+        checkValidityDeclarations(ast.root);
 
+    }
+
+
+
+    private void checkValidityDeclarations(ASTNode root) {
+        //Gets all ASTNode with instance of Declaration
+        ArrayList<Declaration> declarations = getAllDeclarations(root);
+
+        //Removes all declarations from ArrayList containing either a Color or Boolean and sets error on concerned node
+        declarations.removeIf(node -> checkValidityLiteralsInExpression((Operation) node.expression));
+
+
+    }
+
+    //Returns ArrayList containing all Declaration nodes within AST
+    private ArrayList<Declaration> getAllDeclarations(ASTNode node) {
+        ArrayList<Declaration> temp = new ArrayList<>();
+        if(node instanceof Declaration) {
+            temp.add((Declaration) node);
+        } else {
+            for(ASTNode child : node.getChildren()) {
+                var temp2 = getAllDeclarations(child);
+                if(!temp2.isEmpty()) {
+                    temp.addAll(temp2);
+                }
+            }
+        }
+        return temp;
+    }
+
+
+    //Returns true if Declaration contains Color or Boolean
+    private boolean checkValidityLiteralsInExpression(Operation node) {
+        Expression lhs = node.lhs;
+        Expression rhs = node.rhs;
+        if (node.lhs instanceof Operation) {
+            checkValidityLiteralsInExpression((Operation) node.lhs);
+        } else {
+            ExpressionType exTypeL = getExpressionType(lhs);
+            ExpressionType exTypeR = getExpressionType(rhs);
+            if (exTypeL == BOOL || exTypeL == COLOR) {
+                lhs.setError("Colors and/or Boolean DataTypes are not allowed in Expressions.");
+                return false;
+            }
+            if (exTypeR == BOOL || exTypeR == COLOR) {
+                rhs.setError("Colors and/or Boolean DataTypes are not allowed in Expressions.");
+                return false;
+            }
+        }
+        return true;
     }
 
     private void setVariableAssignment(ASTNode root) {
@@ -40,42 +92,24 @@ public class Checker {
 
 
 
-    //Recursive functions which finds all ASTNodes which are Operations
-    private void checkValidityOperations(ASTNode node) {
-        if(node instanceof Operation) {
-            checkIfExpressionTypesAreEqual((Operation) node);
-        }
-    }
-
-    private void checkIfExpressionTypesAreEqual(Operation operation) {
-
-        ExpressionType exTypeLeft = null;
-        ExpressionType exTypeRight = null;
-
-        if(operation.lhs instanceof VariableReference) {
-            exTypeLeft = variableTypes.getFirst().get(((VariableReference) operation.lhs).name);
-        } else {
-            exTypeLeft = getExpressionType(operation.lhs);
-        }
-
-        if(operation.rhs instanceof VariableReference) {
-            exTypeRight = variableTypes.getFirst().get(((VariableReference) operation.rhs).name);
-        } else {
-            exTypeRight = getExpressionType(operation.rhs);
-        }
-
-
-        //logica
-        
-
-    }
-
 
     //Supporting functions
     /*--------------------------------------------------------*/
 
-    //Returns ExpressionType based on Literal
+    //Checks instance of Expression and returns ExpressionType
     private ExpressionType getExpressionType(Expression expression) {
+        if (expression instanceof Literal) {
+            return getExpressionTypeFromLiteral(expression);
+        } else if (expression instanceof VariableReference) {
+            return getExpressionTypeFromHashMap(expression);
+        } else {
+            // errorhandling
+            return null;
+        }
+    }
+
+    //Returns ExpressionType based on Literal
+    private ExpressionType getExpressionTypeFromLiteral(Expression expression) {
         if (expression instanceof BoolLiteral) {
             return BOOL;
         } else if (expression instanceof ColorLiteral) {
@@ -90,4 +124,18 @@ public class Checker {
             return UNDEFINED;
         }
     }
+
+    //Returns ExpressionType from VariableType Hashmap
+    private ExpressionType getExpressionTypeFromHashMap(Expression expression) {
+        if (expression instanceof VariableReference) {
+            for (int i = 0; i < variableTypes.getSize(); i++) {
+                var temp = variableTypes.get(i).get(((VariableReference) expression).name);
+                if (temp != null) {
+                    return temp;
+                }
+            }
+        }
+        return null;
+    }
+
 }
