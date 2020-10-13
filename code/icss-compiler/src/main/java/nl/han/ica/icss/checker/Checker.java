@@ -9,6 +9,7 @@ import static nl.han.ica.icss.ast.types.ExpressionType.*;
 
 import nl.han.ica.icss.ast.types.ExpressionType;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -21,23 +22,38 @@ public class Checker {
         variableTypes = new HANLinkedList<>();
 
         //Gets all ASTNodes which declare a variable. In this case it'll be Declaration and VariableAssignment
-        ArrayList<ASTNode> variablesDeclarations = getAllDeclarations(ast.root);
+        ArrayList<ASTNode> variableDeclarations = getAllDeclarations(ast.root);
 
         //Removes all nodes from ArrayList containing either a Color or Boolean and sets error on concerned node
-        variablesDeclarations.removeIf(node ->
+        variableDeclarations = trimExpressionsFromDeclarations(variableDeclarations);
+
+        //Checks the validity of the operands in remaining expressions
+        //VariableAssignments might be used in Declarations, these need to be checked first
+        checkValidityOperandsInExpressions(variableDeclarations);
+
+    }
+
+    //Checks if the combination of ExpressionTypes and an operand produce a valid result
+    private void checkValidityOperandsInExpressions(ArrayList<ASTNode> variableDeclarations) {
+        
+    }
+
+    //Calls function underneath
+    private ArrayList<ASTNode> trimExpressionsFromDeclarations(ArrayList<ASTNode> variableDeclarations) {
+        variableDeclarations.removeIf(node ->
         {
             if(node instanceof Declaration) {
                 if (((Declaration) node).expression instanceof Operation) {
                     return !checkValidityLiteralsInExpression((Operation) ((Declaration) node).expression);
                 }
             } else if (node instanceof VariableAssignment) {
-                if (((VariableAssignment) node).expression instanceof VariableReference) {
+                if (((VariableAssignment) node).expression instanceof Operation) {
                     return !checkValidityLiteralsInExpression((Operation) ((VariableAssignment) node).expression);
                 }
             }
             return true;
         });
-
+        return variableDeclarations;
     }
 
 
@@ -64,22 +80,21 @@ public class Checker {
         Expression rhs = node.rhs;
         if (node.lhs instanceof Operation) {
             checkValidityLiteralsInExpression((Operation) node.lhs);
-        } else {
+        }
+        if (node.rhs instanceof Operation) {
+            checkValidityLiteralsInExpression((Operation) node.rhs);
+        }
             ExpressionType exTypeL = getExpressionType(lhs);
             if (exTypeL == BOOL || exTypeL == COLOR) {
                 lhs.setError("Colors and/or Boolean DataTypes are not allowed in Expressions.");
                 return false;
             }
-        }
-        if (node.rhs instanceof Operation) {
-            checkValidityLiteralsInExpression((Operation) node.rhs);
-        } else {
+
             ExpressionType exTypeR = getExpressionType(rhs);
             if (exTypeR == BOOL || exTypeR == COLOR) {
                 rhs.setError("Colors and/or Boolean DataTypes are not allowed in Expressions.");
                 return false;
             }
-        }
         return true;
     }
 
