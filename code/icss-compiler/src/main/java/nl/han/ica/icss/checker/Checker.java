@@ -1,5 +1,6 @@
 package nl.han.ica.icss.checker;
 
+import com.google.errorprone.annotations.Var;
 import nl.han.ica.datastructures.HANLinkedList;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.*;
@@ -8,7 +9,6 @@ import static nl.han.ica.icss.ast.types.ExpressionType.*;
 
 import nl.han.ica.icss.ast.types.ExpressionType;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -20,14 +20,20 @@ public class Checker {
     public void check(AST ast) {
         variableTypes = new HANLinkedList<>();
 
-        //Gets all ASTNode with instance of Declaration
-        ArrayList<Declaration> declarations = getAllDeclarations(ast.root);
+        //Gets all ASTNodes which declare a variable. In this case it'll be Declaration and VariableAssignment
+        ArrayList<ASTNode> variablesDeclarations = getAllDeclarations(ast.root);
 
-        //Removes all declarations from ArrayList containing either a Color or Boolean and sets error on concerned node
-        declarations.removeIf(node ->
+        //Removes all nodes from ArrayList containing either a Color or Boolean and sets error on concerned node
+        variablesDeclarations.removeIf(node ->
         {
-            if (node.expression instanceof Operation) {
-                return !checkValidityLiteralsInExpression((Operation) node.expression);
+            if(node instanceof Declaration) {
+                if (((Declaration) node).expression instanceof Operation) {
+                    return !checkValidityLiteralsInExpression((Operation) ((Declaration) node).expression);
+                }
+            } else if (node instanceof VariableAssignment) {
+                if (((VariableAssignment) node).expression instanceof VariableReference) {
+                    return !checkValidityLiteralsInExpression((Operation) ((VariableAssignment) node).expression);
+                }
             }
             return true;
         });
@@ -36,10 +42,10 @@ public class Checker {
 
 
     //Returns ArrayList containing all Declaration nodes within AST
-    private ArrayList<Declaration> getAllDeclarations(ASTNode node) {
-        ArrayList<Declaration> temp = new ArrayList<>();
-        if (node instanceof Declaration) {
-            temp.add((Declaration) node);
+    private ArrayList<ASTNode> getAllDeclarations(ASTNode node) {
+        ArrayList<ASTNode> temp = new ArrayList<>();
+        if (node instanceof Declaration | node instanceof VariableAssignment) {
+            temp.add((ASTNode) node);
         } else {
             for (ASTNode child : node.getChildren()) {
                 var temp2 = getAllDeclarations(child);
