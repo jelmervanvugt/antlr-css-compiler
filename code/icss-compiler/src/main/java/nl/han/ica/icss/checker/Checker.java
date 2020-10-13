@@ -21,23 +21,29 @@ public class Checker {
         variableTypes = new HANLinkedList<>();
 
         //Gets all ASTNode with instance of Declaration
-        ArrayList<Declaration> declarations = getAllDeclarations(root);
+        ArrayList<Declaration> declarations = getAllDeclarations(ast.root);
 
         //Removes all declarations from ArrayList containing either a Color or Boolean and sets error on concerned node
-        declarations.removeIf(node -> checkValidityLiteralsInExpression((Operation) node.expression));
+        declarations.removeIf(node ->
+        {
+            if (node.expression instanceof Operation) {
+                return checkValidityLiteralsInExpression((Operation) node.expression);
+            }
+            return true;
+        });
 
     }
-    
+
 
     //Returns ArrayList containing all Declaration nodes within AST
     private ArrayList<Declaration> getAllDeclarations(ASTNode node) {
         ArrayList<Declaration> temp = new ArrayList<>();
-        if(node instanceof Declaration) {
+        if (node instanceof Declaration) {
             temp.add((Declaration) node);
         } else {
-            for(ASTNode child : node.getChildren()) {
+            for (ASTNode child : node.getChildren()) {
                 var temp2 = getAllDeclarations(child);
-                if(!temp2.isEmpty()) {
+                if (!temp2.isEmpty()) {
                     temp.addAll(temp2);
                 }
             }
@@ -78,8 +84,6 @@ public class Checker {
             }
         }
     }
-
-
 
 
     //Supporting functions
