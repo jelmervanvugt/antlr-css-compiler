@@ -60,11 +60,15 @@ public class Checker {
             checkValidityLiteralsInExpression((Operation) node.lhs);
         } else {
             ExpressionType exTypeL = getExpressionType(lhs);
-            ExpressionType exTypeR = getExpressionType(rhs);
             if (exTypeL == BOOL || exTypeL == COLOR) {
                 lhs.setError("Colors and/or Boolean DataTypes are not allowed in Expressions.");
                 return false;
             }
+        }
+        if (node.rhs instanceof Operation) {
+            checkValidityLiteralsInExpression((Operation) node.rhs);
+        } else {
+            ExpressionType exTypeR = getExpressionType(rhs);
             if (exTypeR == BOOL || exTypeR == COLOR) {
                 rhs.setError("Colors and/or Boolean DataTypes are not allowed in Expressions.");
                 return false;
@@ -87,7 +91,7 @@ public class Checker {
 
 
     //Supporting functions
-    /*--------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
 
     //Checks instance of Expression and returns ExpressionType
     private ExpressionType getExpressionType(Expression expression) {
