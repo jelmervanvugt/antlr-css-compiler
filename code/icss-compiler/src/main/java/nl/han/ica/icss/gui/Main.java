@@ -1,6 +1,7 @@
 package nl.han.ica.icss.gui;
 
 import nl.han.ica.datastructures.HANLinkedList;
+import nl.han.ica.icss.ast.*;
 
 import java.io.IOException;
 
