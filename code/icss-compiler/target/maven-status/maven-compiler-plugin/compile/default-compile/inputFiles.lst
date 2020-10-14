@@ -19,7 +19,6 @@ C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\gui\InputPane.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\gui\Main.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\ast\literals\ColorLiteral.java
-C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\checker\errors\OperationTypeException.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\ast\literals\BoolLiteral.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\ast\Stylesheet.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\Exceptions\StackIsEmptyException.java
@@ -37,7 +36,6 @@ C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\datastructures\IHANLinkedList.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\ast\AST.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\datastructures\IHANQueue.java
-C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\checker\errors\VariableUndefinedException.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\ast\operations\MultiplyOperation.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\ast\literals\ScalarLiteral.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\transforms\Transform.java
@@ -46,6 +44,7 @@ C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\target\generated-sources\antlr4\nl\han\ica\icss\parser\ICSSLexer.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\ast\Operation.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\parser\ASTListener.java
+C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\checker\ScopeManager.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\ast\Selector.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\ast\literals\PercentageLiteral.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\gui\OutputPane.java

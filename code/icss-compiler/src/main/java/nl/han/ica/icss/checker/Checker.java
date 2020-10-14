@@ -15,10 +15,10 @@ import java.util.HashMap;
 
 public class Checker {
 
-    private HANLinkedList<HashMap<String, ExpressionType>> variableTypes;
+    private ScopeManager scopeManager;
 
     public void check(AST ast) {
-        variableTypes = new HANLinkedList<>();
+        scopeManager = new ScopeManager();
         checkStylesheet(ast.root);
     }
 
@@ -58,17 +58,17 @@ public class Checker {
         if (astNode instanceof VariableAssignment) {
             varName = ((VariableAssignment) astNode).name.name;
             if(((VariableAssignment) astNode).expression instanceof Literal) {
-                putVariableInHashMap(varName, getExpressionType(((VariableAssignment) astNode).expression));
+                scopeManager.addVariable(varName, getExpressionType(((VariableAssignment) astNode).expression));
                 return;
             }
             expression = ((VariableAssignment) astNode).expression;
         } else {
             varName = ((Declaration) astNode).property.name;
             if(((Declaration) astNode).expression instanceof VariableReference) {
-                putVariableInHashMap(varName, getExpressionTypeFromHashMap(((Declaration) astNode).expression));
+                scopeManager.addVariable(varName, scopeManager.getVariable(((VariableReference)((Declaration) astNode).expression).name));
                 return;
             } else if(((Declaration) astNode).expression instanceof Literal) {
-                putVariableInHashMap(varName, getExpressionType(((Declaration) astNode).expression));
+                scopeManager.addVariable(varName, getExpressionType(((Declaration) astNode).expression));
                 return;
             }
             expression = ((Declaration) astNode).expression;
@@ -84,7 +84,7 @@ public class Checker {
         exType = checkFaultyOperandInExpression((Operation) expression);
 
         //Declares variable in HashMap if Expression is valid
-        if (exType != null) putVariableInHashMap(varName, exType);
+        if (exType != null) scopeManager.addVariable(varName, exType);
     }
 
     //Returns true if Expression contains Color or Boolean
@@ -173,7 +173,7 @@ public class Checker {
         if (expression instanceof Literal) {
             return getExpressionTypeFromLiteral(expression);
         } else if (expression instanceof VariableReference) {
-            return getExpressionTypeFromHashMap(expression);
+            return scopeManager.getVariable(((VariableReference) expression).name);
         } else {
             // errorhandling
             return null;
@@ -197,18 +197,6 @@ public class Checker {
         }
     }
 
-    //Returns ExpressionType from VariableType Hashmap
-    private ExpressionType getExpressionTypeFromHashMap(Expression expression) {
-        if (expression instanceof VariableReference) {
-            for (int i = 0; i < variableTypes.getSize(); i++) {
-                var temp = variableTypes.get(i).get(((VariableReference) expression).name);
-                if (temp != null) {
-                    return temp;
-                }
-            }
-        }
-        return null;
-    }
 
     //Returns operand type from Operation
     private Operation getOperand(Operation astNode) {
@@ -223,14 +211,5 @@ public class Checker {
             return null;
         }
     }
-
-    //Puts VariableAssignments in HashMap
-    private void putVariableInHashMap(String name, ExpressionType expressionType) {
-        HashMap<String, ExpressionType> hashMap = new HashMap<>();
-        hashMap.put(name, expressionType);
-        variableTypes.addLast(hashMap);
-    }
-
-    //Calculates outcome of Expression
 
 }
