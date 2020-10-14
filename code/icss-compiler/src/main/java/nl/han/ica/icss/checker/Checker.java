@@ -1,6 +1,5 @@
 package nl.han.ica.icss.checker;
 
-import nl.han.ica.datastructures.HANLinkedList;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.*;
 
@@ -11,24 +10,26 @@ import nl.han.ica.icss.ast.operations.MultiplyOperation;
 import nl.han.ica.icss.ast.operations.SubtractOperation;
 import nl.han.ica.icss.ast.types.ExpressionType;
 
-import java.util.HashMap;
-
 public class Checker {
 
     private ScopeManager scopeManager;
 
     public void check(AST ast) {
         scopeManager = new ScopeManager();
+        scopeManager.enterScope();
         checkStylesheet(ast.root);
+        scopeManager.exitScope();
     }
 
     private void checkStylesheet(ASTNode stylesheet) {
-        //VariableAssignments might be used in Declarations, these need to be checked first
+        //Global VariableAssignments might be used in Declarations, these need to be checked first
         stylesheet.getChildren().forEach(astNode -> {
             if (astNode instanceof VariableAssignment) {
                 checkValidityExpression(astNode);
             }
         });
+
+        //Checking Stylerules
         stylesheet.getChildren().forEach(astNode -> {
             if (astNode instanceof Stylerule) {
                 checkStylerule((Stylerule) astNode);
@@ -36,13 +37,46 @@ public class Checker {
         });
     }
 
-    //Children of stylesheet
+    //Children of Stylesheet
     private void checkStylerule(Stylerule stylerule) {
+        scopeManager.enterScope();
         stylerule.getChildren().forEach(astNode -> {
-            if(astNode instanceof Declaration) {
+            if (astNode instanceof Declaration | astNode instanceof VariableAssignment) {
                 checkValidityExpression(astNode);
+            } else if (astNode instanceof IfClause) {
+                checkIfClause((IfClause) astNode);
             }
         });
+        scopeManager.exitScope();
+    }
+
+    //Children of Stylerule
+    private void checkIfClause(IfClause ifClause) {
+        scopeManager.enterScope();
+        ifClause.getChildren().forEach(astNode -> {
+            if (astNode instanceof Declaration | astNode instanceof VariableAssignment) {
+                checkValidityExpression(astNode);
+            } else if (astNode instanceof IfClause) {
+                checkIfClause((IfClause) astNode);
+            }
+        });
+        if (ifClause.elseClause != null) checkElseClause(ifClause.elseClause);
+        if (getExpressionType(ifClause.conditionalExpression) != BOOL)
+            ifClause.setError("IfClause must have a conditional expression of type Boolean.");
+        scopeManager.exitScope();
+    }
+
+    //Child of IfClause
+    private void checkElseClause(ElseClause elseClause) {
+        scopeManager.enterScope();
+        elseClause.getChildren().forEach(astNode -> {
+            if (astNode instanceof Declaration) {
+                checkValidityExpression(astNode);
+            } else if (astNode instanceof IfClause) {
+                checkIfClause((IfClause) astNode);
+            }
+        });
+        scopeManager.exitScope();
     }
 
 
@@ -53,22 +87,22 @@ public class Checker {
         Expression expression;
         ExpressionType exType;
 
-        //Below if statement checks if VariableAssignment or Declaration has a nested Expression
-
+        //Checks if Declaration or VariableAssignment has a nested expression. If FALSE these do not need to be checked.
         if (astNode instanceof VariableAssignment) {
             varName = ((VariableAssignment) astNode).name.name;
-            if(((VariableAssignment) astNode).expression instanceof Literal) {
+            if (((VariableAssignment) astNode).expression instanceof Literal) {
+                scopeManager.addVariable(varName, getExpressionType(((VariableAssignment) astNode).expression));
+                return;
+            } else if (((VariableAssignment) astNode).expression instanceof VariableReference) {
                 scopeManager.addVariable(varName, getExpressionType(((VariableAssignment) astNode).expression));
                 return;
             }
             expression = ((VariableAssignment) astNode).expression;
         } else {
             varName = ((Declaration) astNode).property.name;
-            if(((Declaration) astNode).expression instanceof VariableReference) {
-                scopeManager.addVariable(varName, scopeManager.getVariable(((VariableReference)((Declaration) astNode).expression).name));
+            if (((Declaration) astNode).expression instanceof VariableReference) {
                 return;
-            } else if(((Declaration) astNode).expression instanceof Literal) {
-                scopeManager.addVariable(varName, getExpressionType(((Declaration) astNode).expression));
+            } else if (((Declaration) astNode).expression instanceof Literal) {
                 return;
             }
             expression = ((Declaration) astNode).expression;
@@ -99,14 +133,12 @@ public class Checker {
         }
         ExpressionType exTypeL = getExpressionType(lhs);
         if (exTypeL == BOOL || exTypeL == COLOR) {
-            System.out.println("boolean or color");
             lhs.setError("Colors and/or Boolean DataTypes are not allowed in Expressions.");
             return true;
         }
 
         ExpressionType exTypeR = getExpressionType(rhs);
         if (exTypeR == BOOL || exTypeR == COLOR) {
-            System.out.println("boolean or color");
             rhs.setError("Colors and/or Boolean DataTypes are not allowed in Expressions.");
             return true;
         }
@@ -132,10 +164,8 @@ public class Checker {
         }
 
         if (exTypeL == null || exTypeL == UNDEFINED) {
-            System.out.println("undefined variable");
             astNode.setError("Variable is not declared or yet undefined within scope.");
         } else if (exTypeR == null || exTypeR == UNDEFINED) {
-            System.out.println("undefined variable");
             astNode.setError("Variable is not declared or yet undefined within scope.");
         } else {
 
@@ -143,7 +173,6 @@ public class Checker {
 
             if (operand instanceof AddOperation || operand instanceof SubtractOperation) {
                 if (exTypeL.compareTo(exTypeR) != 0) {
-                    System.out.println("wrong operands");
                     astNode.setError("Values must be of compatible types.");
                     return null;
                 } else {
@@ -154,7 +183,6 @@ public class Checker {
                     if (exTypeL == SCALAR) return exTypeR;
                     return exTypeL;
                 } else {
-                    System.out.println("wrong operands");
                     astNode.setError("Multiply operations must have a minimun of one scalar value.");
                 }
             } else {
