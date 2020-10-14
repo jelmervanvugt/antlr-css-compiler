@@ -1,5 +1,6 @@
 package nl.han.ica.icss.checker;
 
+import com.google.errorprone.annotations.Var;
 import nl.han.ica.datastructures.HANLinkedList;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.*;
@@ -11,19 +12,7 @@ import nl.han.ica.icss.ast.operations.MultiplyOperation;
 import nl.han.ica.icss.ast.operations.SubtractOperation;
 import nl.han.ica.icss.ast.types.ExpressionType;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-
-/*
-
-TO DO
-
--   extraheren van subklassen uit checker
--   if else clauses fixen
--   nadat expressions in variableassignments zijn gechecked moeten degene zonder error worden toegevoegd in hashmap
-
- */
-
 
 public class Checker {
 
@@ -31,61 +20,108 @@ public class Checker {
 
     public void check(AST ast) {
         variableTypes = new HANLinkedList<>();
+        checkStylesheet(ast.root);
+    }
 
-        //Gets all ASTNodes which declare a variable. In this case it'll be Declaration and VariableAssignment
-        ArrayList<ASTNode> variableDeclarations = getAllDeclarations(ast.root);
+    private void checkStylesheet(ASTNode stylesheet) {
+        //VariableAssignments might be used in Declarations, these need to be checked first
+        stylesheet.getChildren().forEach(astNode -> {
+            if (astNode instanceof VariableAssignment) {
+                checkValidityExpression(astNode);
+            }
+        });
+        stylesheet.getChildren().forEach(astNode -> {
+            if (astNode instanceof Stylerule) {
+                checkStylerule((Stylerule) astNode);
+            }
+        });
+    }
 
-        //Removes all nodes from ArrayList containing either a Color or Boolean and sets error on concerned node
-        variableDeclarations = trimExpressionsFromDeclarations(variableDeclarations);
-
-        //Checks the validity of the operands in remaining expressions
-        checkValidityOperandsInExpressions(variableDeclarations);
+    //Children of stylesheet
+    private void checkStylerule(Stylerule stylerule) {
 
     }
 
-    //Checks if the combination of ExpressionTypes and an operand produce a valid result
-    private void checkValidityOperandsInExpressions(ArrayList<ASTNode> astNodes) {
-        //Making two separate arrays, one containing VariableAssignments and one Declarations
-        ArrayList<VariableAssignment> variableAssignments = new ArrayList<>();
-        ArrayList<Declaration> variableDeclarations = new ArrayList<>();
 
-        astNodes.forEach(astNode -> {
-            if (astNode instanceof VariableAssignment) {
-                variableAssignments.add((VariableAssignment) astNode);
-            } else {
-                variableDeclarations.add((Declaration) astNode);
+    //Checks validity of VariableAssignments and Declarations
+    private void checkValidityExpression(ASTNode astNode) {
+
+        String varName;
+        Expression expression;
+        ExpressionType exType;
+
+        //Below if statement checks if VariableAssignment or Declaration has a nested Expression
+
+        if (astNode instanceof VariableAssignment) {
+            varName = ((VariableAssignment) astNode).name.name;
+            if(((VariableAssignment) astNode).expression instanceof Literal) {
+                putVariableInHashMap(varName, getExpressionType(((VariableAssignment) astNode).expression));
+                return;
             }
-            ;
-        });
-
-
-        //VariableAssignments might be used in Declarations, these need to be checked first
-        variableAssignments.forEach(astNode -> checkValidityOperands((Operation) astNode.expression));
-        //Putting VariableAssignments in HashMap if their expression is correct
-        variableAssignments.forEach(astNode -> {
-            if ((Operation) astNode.expression == null) {
-                setVariableAssignmentInHashMap(astNode);
+            expression = ((VariableAssignment) astNode).expression;
+        } else {
+            varName = ((Declaration) astNode).property.name;
+            if(((Declaration) astNode).expression instanceof VariableReference) {
+                putVariableInHashMap(varName, getExpressionTypeFromHashMap(((Declaration) astNode).expression));
+                return;
+            } else if(((Declaration) astNode).expression instanceof Literal) {
+                putVariableInHashMap(varName, getExpressionType(((Declaration) astNode).expression));
+                return;
             }
-        });
-        //Checking Expressions contained by Declarations
-        variableDeclarations.forEach(astNode -> checkValidityOperands((Operation) astNode.expression));
+            expression = ((Declaration) astNode).expression;
+        }
 
+        //If Expression contains a Boolean of Color an error is set on concerned node
+        if (checkColorBoolInExpression((Operation) expression)) {
+            return;
+        }
+
+        //Checks if Expression contains an operand which will result in a syntax error
+        //If Expression is valid returns resulting ExpressionType
+        exType = checkFaultyOperandInExpression((Operation) expression);
+
+        //Declares variable in HashMap if Expression is valid
+        if (exType != null) putVariableInHashMap(varName, exType);
+    }
+
+    //Returns true if Expression contains Color or Boolean
+    private boolean checkColorBoolInExpression(Operation node) {
+        Expression lhs = node.lhs;
+        Expression rhs = node.rhs;
+        if (node.lhs instanceof Operation) {
+            return checkColorBoolInExpression((Operation) node.lhs);
+        }
+        if (node.rhs instanceof Operation) {
+            return checkColorBoolInExpression((Operation) node.rhs);
+        }
+        ExpressionType exTypeL = getExpressionType(lhs);
+        if (exTypeL == BOOL || exTypeL == COLOR) {
+            lhs.setError("Colors and/or Boolean DataTypes are not allowed in Expressions.");
+            return true;
+        }
+
+        ExpressionType exTypeR = getExpressionType(rhs);
+        if (exTypeR == BOOL || exTypeR == COLOR) {
+            rhs.setError("Colors and/or Boolean DataTypes are not allowed in Expressions.");
+            return true;
+        }
+        return false;
     }
 
     //Implements logic when comparing outcome of Operation
-    private ExpressionType checkValidityOperands(Operation astNode) {
+    private ExpressionType checkFaultyOperandInExpression(Operation astNode) {
 
         ExpressionType exTypeL;
         ExpressionType exTypeR;
 
         if (astNode.lhs instanceof Operation) {
-            exTypeL = checkValidityOperands((Operation) astNode.lhs);
+            exTypeL = checkFaultyOperandInExpression((Operation) astNode.lhs);
         } else {
             exTypeL = getExpressionType(astNode.lhs);
         }
 
         if (astNode.rhs instanceof Operation) {
-            exTypeR = checkValidityOperands((Operation) astNode.lhs);
+            exTypeR = checkFaultyOperandInExpression((Operation) astNode.lhs);
         } else {
             exTypeR = getExpressionType(astNode.rhs);
         }
@@ -101,9 +137,15 @@ public class Checker {
             if (operand instanceof AddOperation || operand instanceof SubtractOperation) {
                 if (exTypeL.compareTo(exTypeR) != 0) {
                     astNode.setError("Values must be of compatible types.");
+                    return null;
+                } else {
+                    return exTypeL;
                 }
             } else if (operand instanceof MultiplyOperation) {
-                if (exTypeL != SCALAR || exTypeR != SCALAR) {
+                if (exTypeL == SCALAR || exTypeR == SCALAR) {
+                    if (exTypeL == SCALAR) return exTypeR;
+                    return exTypeL;
+                } else {
                     astNode.setError("Multiply operations must have a minimun of one scalar value.");
                 }
             } else {
@@ -111,66 +153,6 @@ public class Checker {
             }
         }
         return null;
-    }
-
-    //Calls function underneath
-    private ArrayList<ASTNode> trimExpressionsFromDeclarations(ArrayList<ASTNode> variableDeclarations) {
-        variableDeclarations.removeIf(node ->
-        {
-            if (node instanceof Declaration) {
-                if (((Declaration) node).expression instanceof Operation) {
-                    return !checkValidityLiteralsInExpression((Operation) ((Declaration) node).expression);
-                }
-            } else if (node instanceof VariableAssignment) {
-                if (((VariableAssignment) node).expression instanceof Operation) {
-                    return !checkValidityLiteralsInExpression((Operation) ((VariableAssignment) node).expression);
-                }
-            }
-            return true;
-        });
-        return variableDeclarations;
-    }
-
-
-    //Returns ArrayList containing all Declaration nodes within AST
-    private ArrayList<ASTNode> getAllDeclarations(ASTNode node) {
-        ArrayList<ASTNode> temp = new ArrayList<>();
-        if (node instanceof Declaration | node instanceof VariableAssignment) {
-            temp.add((ASTNode) node);
-        } else {
-            for (ASTNode child : node.getChildren()) {
-                var temp2 = getAllDeclarations(child);
-                if (!temp2.isEmpty()) {
-                    temp.addAll(temp2);
-                }
-            }
-        }
-        return temp;
-    }
-
-
-    //Returns true if Declaration contains Color or Boolean
-    private boolean checkValidityLiteralsInExpression(Operation node) {
-        Expression lhs = node.lhs;
-        Expression rhs = node.rhs;
-        if (node.lhs instanceof Operation) {
-            checkValidityLiteralsInExpression((Operation) node.lhs);
-        }
-        if (node.rhs instanceof Operation) {
-            checkValidityLiteralsInExpression((Operation) node.rhs);
-        }
-        ExpressionType exTypeL = getExpressionType(lhs);
-        if (exTypeL == BOOL || exTypeL == COLOR) {
-            lhs.setError("Colors and/or Boolean DataTypes are not allowed in Expressions.");
-            return false;
-        }
-
-        ExpressionType exTypeR = getExpressionType(rhs);
-        if (exTypeR == BOOL || exTypeR == COLOR) {
-            rhs.setError("Colors and/or Boolean DataTypes are not allowed in Expressions.");
-            return false;
-        }
-        return true;
     }
 
 
@@ -234,15 +216,12 @@ public class Checker {
     }
 
     //Puts VariableAssignments in HashMap
-    private void setVariableAssignmentInHashMap(VariableAssignment variableAssignment) {
-        String propertyName = variableAssignment.name.name;
-
-        // hier moet je dan weer de expressiontype gaan calculaten als het een geneste expressie is
-
-//        ExpressionType expressionType =
-//        HashMap<String, ExpressionType> hashMap = new HashMap<>();
-//        hashMap.put(propertyName, expressionType);
-//        variableTypes.addLast(hashMap);
+    private void putVariableInHashMap(String name, ExpressionType expressionType) {
+        HashMap<String, ExpressionType> hashMap = new HashMap<>();
+        hashMap.put(name, expressionType);
+        variableTypes.addLast(hashMap);
     }
+
+    //Calculates outcome of Expression
 
 }
