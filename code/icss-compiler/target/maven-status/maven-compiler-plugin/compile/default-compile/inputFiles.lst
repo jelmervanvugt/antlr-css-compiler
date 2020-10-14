@@ -8,6 +8,7 @@ C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\transforms\EvalExpressions.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\checker\Checker.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\target\generated-sources\antlr4\nl\han\ica\icss\parser\ICSSBaseListener.java
+C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\checker\IfClauseChecker.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\ast\selectors\IdSelector.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\generator\Generator.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\datastructures\HANStack.java
@@ -18,11 +19,15 @@ C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\ast\selectors\TagSelector.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\gui\InputPane.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\gui\Main.java
+C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\checker\ExpressionChecker.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\ast\literals\ColorLiteral.java
+C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\checker\StylesheetChecker.java
+C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\checker\ElseClauseChecker.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\ast\literals\BoolLiteral.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\ast\Stylesheet.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\Exceptions\StackIsEmptyException.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\Pipeline.java
+C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\checker\StyleruleChecker.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\gui\MainGui.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\datastructures\HANLinkedList.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\ast\ASTNode.java
@@ -41,6 +46,7 @@ C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\transforms\Transform.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\ast\Declaration.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\ast\VariableReference.java
+C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\checker\ExpressionTypeChecker.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\target\generated-sources\antlr4\nl\han\ica\icss\parser\ICSSLexer.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\ast\Operation.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\parser\ASTListener.java

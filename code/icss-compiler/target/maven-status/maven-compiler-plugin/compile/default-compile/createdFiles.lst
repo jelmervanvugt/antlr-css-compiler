@@ -1,13 +1,17 @@
+nl\han\ica\icss\checker\StyleruleChecker.class
 nl\han\ica\icss\ast\operations\AddOperation.class
 nl\han\ica\icss\ast\Stylesheet.class
 nl\han\ica\icss\transforms\Transform.class
 nl\han\ica\icss\checker\SemanticError.class
 nl\han\ica\icss\parser\ICSSParser$DeclarationContext.class
+nl\han\ica\icss\checker\IfClauseChecker.class
+nl\han\ica\icss\checker\StylesheetChecker.class
 nl\han\ica\icss\ast\types\ExpressionType.class
 nl\han\ica\icss\parser\ICSSParser$TagSelectorContext.class
 nl\han\ica\datastructures\HANQueue.class
 nl\han\ica\icss\ast\AST.class
 nl\han\ica\icss\gui\MainGui$3.class
+nl\han\ica\icss\checker\ExpressionTypeChecker.class
 nl\han\ica\icss\ast\VariableAssignment.class
 nl\han\ica\icss\ast\literals\ColorLiteral.class
 nl\han\ica\icss\ast\operations\MultiplyOperation.class
@@ -33,6 +37,7 @@ nl\han\ica\icss\gui\Main.class
 nl\han\ica\icss\ast\literals\ScalarLiteral.class
 nl\han\ica\icss\parser\ICSSParser$PixelLiteralContext.class
 nl\han\ica\datastructures\IHANStack.class
+nl\han\ica\icss\checker\ElseClauseChecker.class
 nl\han\ica\icss\parser\ICSSParser$StylesheetContext.class
 nl\han\ica\icss\parser\ICSSListener.class
 nl\han\ica\icss\Pipeline.class
@@ -80,3 +85,4 @@ nl\han\ica\icss\gui\InputPane.class
 nl\han\ica\icss\ast\Literal.class
 nl\han\ica\icss\parser\ICSSParser$ValueContext.class
 nl\han\ica\icss\ast\PropertyName.class
+nl\han\ica\icss\checker\ExpressionChecker.class
