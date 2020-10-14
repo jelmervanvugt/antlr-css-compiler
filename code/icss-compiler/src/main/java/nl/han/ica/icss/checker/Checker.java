@@ -1,6 +1,5 @@
 package nl.han.ica.icss.checker;
 
-import com.google.errorprone.annotations.Var;
 import nl.han.ica.datastructures.HANLinkedList;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.*;
@@ -39,7 +38,11 @@ public class Checker {
 
     //Children of stylesheet
     private void checkStylerule(Stylerule stylerule) {
-
+        stylerule.getChildren().forEach(astNode -> {
+            if(astNode instanceof Declaration) {
+                checkValidityExpression(astNode);
+            }
+        });
     }
 
 
@@ -96,12 +99,14 @@ public class Checker {
         }
         ExpressionType exTypeL = getExpressionType(lhs);
         if (exTypeL == BOOL || exTypeL == COLOR) {
+            System.out.println("boolean or color");
             lhs.setError("Colors and/or Boolean DataTypes are not allowed in Expressions.");
             return true;
         }
 
         ExpressionType exTypeR = getExpressionType(rhs);
         if (exTypeR == BOOL || exTypeR == COLOR) {
+            System.out.println("boolean or color");
             rhs.setError("Colors and/or Boolean DataTypes are not allowed in Expressions.");
             return true;
         }
@@ -127,8 +132,10 @@ public class Checker {
         }
 
         if (exTypeL == null || exTypeL == UNDEFINED) {
+            System.out.println("undefined variable");
             astNode.setError("Variable is not declared or yet undefined within scope.");
         } else if (exTypeR == null || exTypeR == UNDEFINED) {
+            System.out.println("undefined variable");
             astNode.setError("Variable is not declared or yet undefined within scope.");
         } else {
 
@@ -136,6 +143,7 @@ public class Checker {
 
             if (operand instanceof AddOperation || operand instanceof SubtractOperation) {
                 if (exTypeL.compareTo(exTypeR) != 0) {
+                    System.out.println("wrong operands");
                     astNode.setError("Values must be of compatible types.");
                     return null;
                 } else {
@@ -146,6 +154,7 @@ public class Checker {
                     if (exTypeL == SCALAR) return exTypeR;
                     return exTypeL;
                 } else {
+                    System.out.println("wrong operands");
                     astNode.setError("Multiply operations must have a minimun of one scalar value.");
                 }
             } else {
