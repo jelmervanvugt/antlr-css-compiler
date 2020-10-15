@@ -1,11 +1,12 @@
 package nl.han.ica.icss.checker;
 
 import nl.han.ica.icss.ast.*;
+import nl.han.ica.icss.ast.types.ExpressionType;
 
 public class Checker {
 
     //IDE's deadlock warning will never occur due to the single thread nature of the application
-    protected static ScopeManager scopeManager = new ScopeManager();
+    protected static ScopeManager<ExpressionType> scopeManager = new ScopeManager();
     private static StylesheetChecker stylesheetChecker = new StylesheetChecker();
     protected static StyleruleChecker styleruleChecker = new StyleruleChecker();
     protected static ExpressionChecker expressionChecker = new ExpressionChecker();

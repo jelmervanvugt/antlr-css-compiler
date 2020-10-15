@@ -10,7 +10,6 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
 
     private int size = 0;
 
-
     @Override
     public void addFirst(T value) {
         add(value, true);
@@ -163,7 +162,9 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
 
     @Override
     public T getFirst() {
-        return head.getValue();
+        if (head != null)
+            return head.getValue();
+        return null;
     }
 
     @Override

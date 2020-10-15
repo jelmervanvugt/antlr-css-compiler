@@ -53,6 +53,7 @@ nl\han\ica\icss\parser\ICSSLexer.class
 nl\han\ica\datastructures\HANStack.class
 nl\han\ica\icss\parser\ICSSParser$BoolLiteralContext.class
 nl\han\ica\icss\parser\ICSSParser$ScalarLiteralContext.class
+nl\han\ica\icss\transforms\ExpressionChecker.class
 nl\han\ica\icss\gui\MainGui$8.class
 nl\han\ica\icss\gui\OutputPane.class
 nl\han\ica\icss\parser\ICSSParser$ElseClauseContext.class

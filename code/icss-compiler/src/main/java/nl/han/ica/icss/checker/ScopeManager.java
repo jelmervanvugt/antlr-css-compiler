@@ -1,20 +1,19 @@
 package nl.han.ica.icss.checker;
 
 import nl.han.ica.datastructures.HANLinkedList;
-import nl.han.ica.icss.ast.types.ExpressionType;
 
 import java.util.HashMap;
 
-public class ScopeManager {
+public class ScopeManager<T> {
 
-    private HANLinkedList<HashMap<String, ExpressionType>> variables;
+    private HANLinkedList<HashMap<String, T>> variables;
 
     public ScopeManager() {
         variables = new HANLinkedList<>();
     }
 
     public void enterScope() {
-        HashMap<String, ExpressionType> hashMap = new HashMap<>();
+        HashMap<String, T> hashMap = new HashMap<>();
         variables.addFirst(hashMap);
     }
 
@@ -24,17 +23,17 @@ public class ScopeManager {
         }
     }
 
-    public void addVariable(String varName, ExpressionType expressionType) {
-        HashMap<String, ExpressionType> scopeVariables = variables.getFirst();
-        scopeVariables.put(varName, expressionType);
+    public void addVariable(String varName, T anytype) {
+        HashMap<String, T> scopeVariables = variables.getFirst();
+        scopeVariables.put(varName, anytype);
         variables.removeFirst();
         variables.addFirst(scopeVariables);
     }
 
-    public ExpressionType getVariable(String varName) {
-        for(HashMap<String, ExpressionType> hashMap : variables) {
-            ExpressionType expressionType = hashMap.get(varName);
-            if(expressionType != null) return expressionType;
+    public T getVariable(String varName) {
+        for(HashMap<String, T> hashMap : variables) {
+            T anytype = hashMap.get(varName);
+            if(anytype != null) return anytype;
         }
         return null;
     }

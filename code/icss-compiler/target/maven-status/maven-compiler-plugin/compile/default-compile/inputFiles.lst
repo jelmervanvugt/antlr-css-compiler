@@ -56,4 +56,5 @@ C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\gui\OutputPane.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\ast\Expression.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\ast\Stylerule.java
+C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\icss\transforms\ExpressionChecker.java
 C:\Users\jelmer van vugt\Documents\GitHub\antlr-css-compiler\code\icss-compiler\src\main\java\nl\han\ica\datastructures\HANQueue.java
