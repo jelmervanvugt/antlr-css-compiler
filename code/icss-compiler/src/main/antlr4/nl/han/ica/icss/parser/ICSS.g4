@@ -45,7 +45,7 @@ ASSIGNMENT_OPERATOR: ':=';
 stylesheet: variableAssignment* styleRule* EOF;
 
 //Stylerule
-styleRule: selector OPEN_BRACE (ifClause | declaration)* CLOSE_BRACE;
+styleRule: selector OPEN_BRACE (ifClause | declaration | variableAssignment)* CLOSE_BRACE;
 selector: tagSelector | classSelector | idSelector;
 tagSelector: LOWER_IDENT;
 classSelector: CLASS_IDENT;

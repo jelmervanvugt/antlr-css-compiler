@@ -10,6 +10,7 @@ import static nl.han.ica.icss.ast.types.ExpressionType.*;
 import static nl.han.ica.icss.ast.types.ExpressionType.UNDEFINED;
 
 public class ExpressionTypeChecker extends Checker {
+
     //Checks instance of Expression and returns ExpressionType
     public ExpressionType getExpressionType(Expression expression) {
         if (expression instanceof Literal) {

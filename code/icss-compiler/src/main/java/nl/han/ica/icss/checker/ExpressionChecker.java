@@ -22,7 +22,12 @@ public class ExpressionChecker extends Checker {
         if (astNode instanceof VariableAssignment) {
             varName = ((VariableAssignment) astNode).name.name;
             if (((VariableAssignment) astNode).expression instanceof Literal) {
-                scopeManager.addVariable(varName, expressionTypeChecker.getExpressionType(((VariableAssignment) astNode).expression));
+                ExpressionType expressionTypeReference = expressionTypeChecker.getExpressionType(((VariableAssignment) astNode).expression);
+                if(expressionTypeReference != null) {
+                    scopeManager.addVariable(varName, expressionTypeReference);
+                    return;
+                }
+                astNode.setError("Variable is not declared or yet undefined within scope.");
                 return;
             } else if (((VariableAssignment) astNode).expression instanceof VariableReference) {
                 scopeManager.addVariable(varName, expressionTypeChecker.getExpressionType(((VariableAssignment) astNode).expression));
@@ -32,6 +37,9 @@ public class ExpressionChecker extends Checker {
         } else {
             varName = ((Declaration) astNode).property.name;
             if (((Declaration) astNode).expression instanceof VariableReference) {
+                ExpressionType expressionTypeReference = expressionTypeChecker.getExpressionType(((Declaration) astNode).expression);
+                if(expressionTypeReference != null) return;
+                astNode.setError("Variable is not declared or yet undefined within scope.");
                 return;
             } else if (((Declaration) astNode).expression instanceof Literal) {
                 return;
