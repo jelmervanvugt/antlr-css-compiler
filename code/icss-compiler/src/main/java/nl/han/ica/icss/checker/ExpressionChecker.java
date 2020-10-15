@@ -110,7 +110,7 @@ public class ExpressionChecker extends Checker {
         }
 
         if (astNode.rhs instanceof Operation) {
-            exTypeR = checkFaultyOperandInExpression((Operation) astNode.lhs);
+            exTypeR = checkFaultyOperandInExpression((Operation) astNode.rhs);
         } else {
             exTypeR = expressionTypeChecker.getExpressionType(astNode.rhs);
         }

@@ -71,8 +71,8 @@ variableReference: CAPITAL_IDENT;
 expression: value | expression MUL expression | expression (PLUS | MIN) expression;
 
 //If clause
-ifClause: IF BOX_BRACKET_OPEN variableReference BOX_BRACKET_CLOSE OPEN_BRACE (declaration | ifClause)* CLOSE_BRACE elseClause*;
-elseClause: ELSE OPEN_BRACE declaration+ CLOSE_BRACE;
+ifClause: IF BOX_BRACKET_OPEN (variableReference | boolLiteral) BOX_BRACKET_CLOSE OPEN_BRACE (declaration | ifClause)* CLOSE_BRACE elseClause*;
+elseClause: ELSE OPEN_BRACE (declaration | ifClause)* CLOSE_BRACE;
 
 
 

@@ -1057,12 +1057,15 @@ public class ICSSParser extends Parser {
 	public static class IfClauseContext extends ParserRuleContext {
 		public TerminalNode IF() { return getToken(ICSSParser.IF, 0); }
 		public TerminalNode BOX_BRACKET_OPEN() { return getToken(ICSSParser.BOX_BRACKET_OPEN, 0); }
-		public VariableReferenceContext variableReference() {
-			return getRuleContext(VariableReferenceContext.class,0);
-		}
 		public TerminalNode BOX_BRACKET_CLOSE() { return getToken(ICSSParser.BOX_BRACKET_CLOSE, 0); }
 		public TerminalNode OPEN_BRACE() { return getToken(ICSSParser.OPEN_BRACE, 0); }
 		public TerminalNode CLOSE_BRACE() { return getToken(ICSSParser.CLOSE_BRACE, 0); }
+		public VariableReferenceContext variableReference() {
+			return getRuleContext(VariableReferenceContext.class,0);
+		}
+		public BoolLiteralContext boolLiteral() {
+			return getRuleContext(BoolLiteralContext.class,0);
+		}
 		public List<DeclarationContext> declaration() {
 			return getRuleContexts(DeclarationContext.class);
 		}
@@ -1106,29 +1109,46 @@ public class ICSSParser extends Parser {
 			match(IF);
 			setState(126);
 			match(BOX_BRACKET_OPEN);
-			setState(127);
-			variableReference();
-			setState(128);
-			match(BOX_BRACKET_CLOSE);
 			setState(129);
+			_errHandler.sync(this);
+			switch (_input.LA(1)) {
+			case CAPITAL_IDENT:
+				{
+				setState(127);
+				variableReference();
+				}
+				break;
+			case TRUE:
+			case FALSE:
+				{
+				setState(128);
+				boolLiteral();
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+			setState(131);
+			match(BOX_BRACKET_CLOSE);
+			setState(132);
 			match(OPEN_BRACE);
-			setState(134);
+			setState(137);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==IF || _la==LOWER_IDENT) {
 				{
-				setState(132);
+				setState(135);
 				_errHandler.sync(this);
 				switch (_input.LA(1)) {
 				case LOWER_IDENT:
 					{
-					setState(130);
+					setState(133);
 					declaration();
 					}
 					break;
 				case IF:
 					{
-					setState(131);
+					setState(134);
 					ifClause();
 					}
 					break;
@@ -1136,23 +1156,23 @@ public class ICSSParser extends Parser {
 					throw new NoViableAltException(this);
 				}
 				}
-				setState(136);
+				setState(139);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(137);
+			setState(140);
 			match(CLOSE_BRACE);
-			setState(141);
+			setState(144);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==ELSE) {
 				{
 				{
-				setState(138);
+				setState(141);
 				elseClause();
 				}
 				}
-				setState(143);
+				setState(146);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -1179,6 +1199,12 @@ public class ICSSParser extends Parser {
 		public DeclarationContext declaration(int i) {
 			return getRuleContext(DeclarationContext.class,i);
 		}
+		public List<IfClauseContext> ifClause() {
+			return getRuleContexts(IfClauseContext.class);
+		}
+		public IfClauseContext ifClause(int i) {
+			return getRuleContext(IfClauseContext.class,i);
+		}
 		public ElseClauseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1200,25 +1226,39 @@ public class ICSSParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(144);
+			setState(147);
 			match(ELSE);
-			setState(145);
+			setState(148);
 			match(OPEN_BRACE);
-			setState(147); 
+			setState(153);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			do {
+			while (_la==IF || _la==LOWER_IDENT) {
 				{
-				{
-				setState(146);
-				declaration();
+				setState(151);
+				_errHandler.sync(this);
+				switch (_input.LA(1)) {
+				case LOWER_IDENT:
+					{
+					setState(149);
+					declaration();
+					}
+					break;
+				case IF:
+					{
+					setState(150);
+					ifClause();
+					}
+					break;
+				default:
+					throw new NoViableAltException(this);
 				}
 				}
-				setState(149); 
+				setState(155);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			} while ( _la==LOWER_IDENT );
-			setState(151);
+			}
+			setState(156);
 			match(CLOSE_BRACE);
 			}
 		}
@@ -1251,7 +1291,7 @@ public class ICSSParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\31\u009c\4\2\t\2"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\31\u00a1\4\2\t\2"+
 		"\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
 		"\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\3\2\7\2*\n\2\f\2\16\2-\13\2\3\2\7\2\60\n\2\f\2\16"+
@@ -1260,39 +1300,42 @@ public class ICSSParser extends Parser {
 		"\3\t\3\n\3\n\3\n\3\n\3\n\3\n\5\n[\n\n\3\13\3\13\3\f\3\f\3\r\3\r\3\16\3"+
 		"\16\3\17\3\17\3\20\3\20\3\20\6\20j\n\20\r\20\16\20k\3\20\3\20\3\21\3\21"+
 		"\3\22\3\22\3\22\3\22\3\22\3\22\3\22\3\22\3\22\7\22{\n\22\f\22\16\22~\13"+
-		"\22\3\23\3\23\3\23\3\23\3\23\3\23\3\23\7\23\u0087\n\23\f\23\16\23\u008a"+
-		"\13\23\3\23\3\23\7\23\u008e\n\23\f\23\16\23\u0091\13\23\3\24\3\24\3\24"+
-		"\6\24\u0096\n\24\r\24\16\24\u0097\3\24\3\24\3\24\2\3\"\25\2\4\6\b\n\f"+
-		"\16\20\22\24\26\30\32\34\36 \"$&\2\4\3\2\7\b\3\2\26\27\2\u009b\2+\3\2"+
-		"\2\2\4\66\3\2\2\2\6E\3\2\2\2\bG\3\2\2\2\nI\3\2\2\2\fK\3\2\2\2\16M\3\2"+
-		"\2\2\20O\3\2\2\2\22Z\3\2\2\2\24\\\3\2\2\2\26^\3\2\2\2\30`\3\2\2\2\32b"+
-		"\3\2\2\2\34d\3\2\2\2\36f\3\2\2\2 o\3\2\2\2\"q\3\2\2\2$\177\3\2\2\2&\u0092"+
-		"\3\2\2\2(*\5\36\20\2)(\3\2\2\2*-\3\2\2\2+)\3\2\2\2+,\3\2\2\2,\61\3\2\2"+
-		"\2-+\3\2\2\2.\60\5\4\3\2/.\3\2\2\2\60\63\3\2\2\2\61/\3\2\2\2\61\62\3\2"+
-		"\2\2\62\64\3\2\2\2\63\61\3\2\2\2\64\65\7\2\2\3\65\3\3\2\2\2\66\67\5\6"+
-		"\4\2\67=\7\22\2\28<\5$\23\29<\5\20\t\2:<\5\36\20\2;8\3\2\2\2;9\3\2\2\2"+
-		";:\3\2\2\2<?\3\2\2\2=;\3\2\2\2=>\3\2\2\2>@\3\2\2\2?=\3\2\2\2@A\7\23\2"+
-		"\2A\5\3\2\2\2BF\5\b\5\2CF\5\n\6\2DF\5\f\7\2EB\3\2\2\2EC\3\2\2\2ED\3\2"+
-		"\2\2F\7\3\2\2\2GH\7\17\2\2H\t\3\2\2\2IJ\7\16\2\2J\13\3\2\2\2KL\7\r\2\2"+
-		"L\r\3\2\2\2MN\7\17\2\2N\17\3\2\2\2OP\5\16\b\2PQ\7\25\2\2QR\5\"\22\2RS"+
-		"\7\24\2\2S\21\3\2\2\2T[\5\24\13\2U[\5\26\f\2V[\5\30\r\2W[\5\32\16\2X["+
-		"\5\34\17\2Y[\5 \21\2ZT\3\2\2\2ZU\3\2\2\2ZV\3\2\2\2ZW\3\2\2\2ZX\3\2\2\2"+
-		"ZY\3\2\2\2[\23\3\2\2\2\\]\t\2\2\2]\25\3\2\2\2^_\7\f\2\2_\27\3\2\2\2`a"+
-		"\7\n\2\2a\31\3\2\2\2bc\7\t\2\2c\33\3\2\2\2de\7\13\2\2e\35\3\2\2\2fg\5"+
-		" \21\2gi\7\31\2\2hj\5\"\22\2ih\3\2\2\2jk\3\2\2\2ki\3\2\2\2kl\3\2\2\2l"+
-		"m\3\2\2\2mn\7\24\2\2n\37\3\2\2\2op\7\20\2\2p!\3\2\2\2qr\b\22\1\2rs\5\22"+
-		"\n\2s|\3\2\2\2tu\f\4\2\2uv\7\30\2\2v{\5\"\22\5wx\f\3\2\2xy\t\3\2\2y{\5"+
-		"\"\22\4zt\3\2\2\2zw\3\2\2\2{~\3\2\2\2|z\3\2\2\2|}\3\2\2\2}#\3\2\2\2~|"+
-		"\3\2\2\2\177\u0080\7\3\2\2\u0080\u0081\7\5\2\2\u0081\u0082\5 \21\2\u0082"+
-		"\u0083\7\6\2\2\u0083\u0088\7\22\2\2\u0084\u0087\5\20\t\2\u0085\u0087\5"+
-		"$\23\2\u0086\u0084\3\2\2\2\u0086\u0085\3\2\2\2\u0087\u008a\3\2\2\2\u0088"+
-		"\u0086\3\2\2\2\u0088\u0089\3\2\2\2\u0089\u008b\3\2\2\2\u008a\u0088\3\2"+
-		"\2\2\u008b\u008f\7\23\2\2\u008c\u008e\5&\24\2\u008d\u008c\3\2\2\2\u008e"+
-		"\u0091\3\2\2\2\u008f\u008d\3\2\2\2\u008f\u0090\3\2\2\2\u0090%\3\2\2\2"+
-		"\u0091\u008f\3\2\2\2\u0092\u0093\7\4\2\2\u0093\u0095\7\22\2\2\u0094\u0096"+
-		"\5\20\t\2\u0095\u0094\3\2\2\2\u0096\u0097\3\2\2\2\u0097\u0095\3\2\2\2"+
-		"\u0097\u0098\3\2\2\2\u0098\u0099\3\2\2\2\u0099\u009a\7\23\2\2\u009a\'"+
-		"\3\2\2\2\17+\61;=EZkz|\u0086\u0088\u008f\u0097";
+		"\22\3\23\3\23\3\23\3\23\5\23\u0084\n\23\3\23\3\23\3\23\3\23\7\23\u008a"+
+		"\n\23\f\23\16\23\u008d\13\23\3\23\3\23\7\23\u0091\n\23\f\23\16\23\u0094"+
+		"\13\23\3\24\3\24\3\24\3\24\7\24\u009a\n\24\f\24\16\24\u009d\13\24\3\24"+
+		"\3\24\3\24\2\3\"\25\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&\2\4\3"+
+		"\2\7\b\3\2\26\27\2\u00a2\2+\3\2\2\2\4\66\3\2\2\2\6E\3\2\2\2\bG\3\2\2\2"+
+		"\nI\3\2\2\2\fK\3\2\2\2\16M\3\2\2\2\20O\3\2\2\2\22Z\3\2\2\2\24\\\3\2\2"+
+		"\2\26^\3\2\2\2\30`\3\2\2\2\32b\3\2\2\2\34d\3\2\2\2\36f\3\2\2\2 o\3\2\2"+
+		"\2\"q\3\2\2\2$\177\3\2\2\2&\u0095\3\2\2\2(*\5\36\20\2)(\3\2\2\2*-\3\2"+
+		"\2\2+)\3\2\2\2+,\3\2\2\2,\61\3\2\2\2-+\3\2\2\2.\60\5\4\3\2/.\3\2\2\2\60"+
+		"\63\3\2\2\2\61/\3\2\2\2\61\62\3\2\2\2\62\64\3\2\2\2\63\61\3\2\2\2\64\65"+
+		"\7\2\2\3\65\3\3\2\2\2\66\67\5\6\4\2\67=\7\22\2\28<\5$\23\29<\5\20\t\2"+
+		":<\5\36\20\2;8\3\2\2\2;9\3\2\2\2;:\3\2\2\2<?\3\2\2\2=;\3\2\2\2=>\3\2\2"+
+		"\2>@\3\2\2\2?=\3\2\2\2@A\7\23\2\2A\5\3\2\2\2BF\5\b\5\2CF\5\n\6\2DF\5\f"+
+		"\7\2EB\3\2\2\2EC\3\2\2\2ED\3\2\2\2F\7\3\2\2\2GH\7\17\2\2H\t\3\2\2\2IJ"+
+		"\7\16\2\2J\13\3\2\2\2KL\7\r\2\2L\r\3\2\2\2MN\7\17\2\2N\17\3\2\2\2OP\5"+
+		"\16\b\2PQ\7\25\2\2QR\5\"\22\2RS\7\24\2\2S\21\3\2\2\2T[\5\24\13\2U[\5\26"+
+		"\f\2V[\5\30\r\2W[\5\32\16\2X[\5\34\17\2Y[\5 \21\2ZT\3\2\2\2ZU\3\2\2\2"+
+		"ZV\3\2\2\2ZW\3\2\2\2ZX\3\2\2\2ZY\3\2\2\2[\23\3\2\2\2\\]\t\2\2\2]\25\3"+
+		"\2\2\2^_\7\f\2\2_\27\3\2\2\2`a\7\n\2\2a\31\3\2\2\2bc\7\t\2\2c\33\3\2\2"+
+		"\2de\7\13\2\2e\35\3\2\2\2fg\5 \21\2gi\7\31\2\2hj\5\"\22\2ih\3\2\2\2jk"+
+		"\3\2\2\2ki\3\2\2\2kl\3\2\2\2lm\3\2\2\2mn\7\24\2\2n\37\3\2\2\2op\7\20\2"+
+		"\2p!\3\2\2\2qr\b\22\1\2rs\5\22\n\2s|\3\2\2\2tu\f\4\2\2uv\7\30\2\2v{\5"+
+		"\"\22\5wx\f\3\2\2xy\t\3\2\2y{\5\"\22\4zt\3\2\2\2zw\3\2\2\2{~\3\2\2\2|"+
+		"z\3\2\2\2|}\3\2\2\2}#\3\2\2\2~|\3\2\2\2\177\u0080\7\3\2\2\u0080\u0083"+
+		"\7\5\2\2\u0081\u0084\5 \21\2\u0082\u0084\5\24\13\2\u0083\u0081\3\2\2\2"+
+		"\u0083\u0082\3\2\2\2\u0084\u0085\3\2\2\2\u0085\u0086\7\6\2\2\u0086\u008b"+
+		"\7\22\2\2\u0087\u008a\5\20\t\2\u0088\u008a\5$\23\2\u0089\u0087\3\2\2\2"+
+		"\u0089\u0088\3\2\2\2\u008a\u008d\3\2\2\2\u008b\u0089\3\2\2\2\u008b\u008c"+
+		"\3\2\2\2\u008c\u008e\3\2\2\2\u008d\u008b\3\2\2\2\u008e\u0092\7\23\2\2"+
+		"\u008f\u0091\5&\24\2\u0090\u008f\3\2\2\2\u0091\u0094\3\2\2\2\u0092\u0090"+
+		"\3\2\2\2\u0092\u0093\3\2\2\2\u0093%\3\2\2\2\u0094\u0092\3\2\2\2\u0095"+
+		"\u0096\7\4\2\2\u0096\u009b\7\22\2\2\u0097\u009a\5\20\t\2\u0098\u009a\5"+
+		"$\23\2\u0099\u0097\3\2\2\2\u0099\u0098\3\2\2\2\u009a\u009d\3\2\2\2\u009b"+
+		"\u0099\3\2\2\2\u009b\u009c\3\2\2\2\u009c\u009e\3\2\2\2\u009d\u009b\3\2"+
+		"\2\2\u009e\u009f\7\23\2\2\u009f\'\3\2\2\2\21+\61;=EZkz|\u0083\u0089\u008b"+
+		"\u0092\u0099\u009b";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
