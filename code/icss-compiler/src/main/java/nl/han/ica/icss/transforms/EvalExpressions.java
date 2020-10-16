@@ -1,6 +1,7 @@
 package nl.han.ica.icss.transforms;
 
 import nl.han.ica.icss.ast.*;
+import nl.han.ica.icss.ast.literals.BoolLiteral;
 import nl.han.ica.icss.checker.ScopeManager;
 
 
@@ -32,7 +33,6 @@ public class EvalExpressions implements Transform {
         scopeManager.enterScope();
         stylerule.getChildren().forEach(astNode -> {
             if(astNode instanceof IfClause) evalIfClause((IfClause) astNode);
-            else if(astNode instanceof ElseClause) evalElseClause((ElseClause) astNode);
             else if(astNode instanceof VariableAssignment | astNode instanceof Declaration) expressionChecker.check(astNode, scopeManager);
         });
         scopeManager.exitScope();
@@ -44,6 +44,7 @@ public class EvalExpressions implements Transform {
             if(astNode instanceof IfClause) evalIfClause((IfClause) astNode);
             else if(astNode instanceof ElseClause) evalElseClause((ElseClause) astNode);
             else if(astNode instanceof VariableAssignment | astNode instanceof Declaration) expressionChecker.check(astNode, scopeManager);
+            else if(astNode instanceof VariableReference) transformConditialExpression(ifClause);
         });
         scopeManager.exitScope();
     }
@@ -56,6 +57,10 @@ public class EvalExpressions implements Transform {
             else if(astNode instanceof VariableAssignment | astNode instanceof Declaration) expressionChecker.check(astNode, scopeManager);
         });
         scopeManager.exitScope();
+    }
+
+    private void transformConditialExpression(IfClause ifClause) {
+        ifClause.conditionalExpression = scopeManager.getVariable(((VariableReference) ifClause.conditionalExpression).name);
     }
 
 }
