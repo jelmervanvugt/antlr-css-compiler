@@ -36,11 +36,9 @@ public class ExpressionChecker {
             varName = ((Declaration) astNode).property.name;
             if (((Declaration) astNode).expression instanceof VariableReference) {
                 outcome = scopeManager.getVariable(((VariableReference) ((Declaration) astNode).expression).name);
-                return;
             } else if (((Declaration) astNode).expression instanceof Literal) {
                 outcome = (Literal) ((Declaration) astNode).expression;
-                return;
-            }
+            } else
             outcome = getOutcomeOfOperation((Operation) ((Declaration) astNode).expression);
         }
 
