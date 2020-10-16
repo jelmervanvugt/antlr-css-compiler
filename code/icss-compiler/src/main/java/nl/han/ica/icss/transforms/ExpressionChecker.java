@@ -6,10 +6,15 @@ import nl.han.ica.icss.ast.literals.PixelLiteral;
 import nl.han.ica.icss.ast.literals.ScalarLiteral;
 import nl.han.ica.icss.ast.operations.AddOperation;
 import nl.han.ica.icss.ast.operations.SubtractOperation;
+import nl.han.ica.icss.checker.ScopeManager;
 
-public class ExpressionChecker extends EvalExpressions {
+public class ExpressionChecker {
 
-    public void check(ASTNode astNode) {
+    ScopeManager<Literal> scopeManager;
+
+    public void check(ASTNode astNode, ScopeManager<Literal> scopeManager) {
+
+        this.scopeManager = scopeManager;
 
         String varName;
         Literal outcome;
@@ -31,8 +36,10 @@ public class ExpressionChecker extends EvalExpressions {
             varName = ((Declaration) astNode).property.name;
             if (((Declaration) astNode).expression instanceof VariableReference) {
                 outcome = scopeManager.getVariable(((VariableReference) ((Declaration) astNode).expression).name);
+                return;
             } else if (((Declaration) astNode).expression instanceof Literal) {
                 outcome = (Literal) ((Declaration) astNode).expression;
+                return;
             }
             outcome = getOutcomeOfOperation((Operation) ((Declaration) astNode).expression);
         }

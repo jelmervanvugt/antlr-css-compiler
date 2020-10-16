@@ -24,10 +24,10 @@ public class ScopeManager<T> {
     }
 
     public void addVariable(String varName, T anytype) {
-        HashMap<String, T> scopeVariables = variables.getFirst();
-        scopeVariables.put(varName, anytype);
+        HashMap<String, T> temp = variables.getFirst();
+        temp.put(varName, anytype);
         variables.removeFirst();
-        variables.addFirst(scopeVariables);
+        variables.addFirst(temp);
     }
 
     public T getVariable(String varName) {

@@ -162,9 +162,7 @@ public class HANLinkedList<T> implements IHANLinkedList<T> {
 
     @Override
     public T getFirst() {
-        if (head != null)
-            return head.getValue();
-        return null;
+        return head.getValue();
     }
 
     @Override

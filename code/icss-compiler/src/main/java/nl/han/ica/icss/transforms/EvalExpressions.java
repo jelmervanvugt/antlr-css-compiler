@@ -1,26 +1,18 @@
 package nl.han.ica.icss.transforms;
 
-import nl.han.ica.datastructures.HANLinkedList;
-import nl.han.ica.datastructures.IHANLinkedList;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.checker.ScopeManager;
 
-import java.util.HashMap;
 
 public class EvalExpressions implements Transform {
 
-    protected IHANLinkedList<HashMap<String, Literal>> variableValues;
     private ExpressionChecker expressionChecker;
-    protected ScopeManager<Literal> scopeManager;
-
-    public EvalExpressions() {
-        variableValues = new HANLinkedList<>();
-        scopeManager = new ScopeManager<>();
-    }
+    private ScopeManager<Literal> scopeManager;
 
     @Override
     public void apply(AST ast) {
         expressionChecker = new ExpressionChecker();
+        scopeManager = new ScopeManager<>();
         evalStylesheet(ast.root);
     }
 
@@ -28,7 +20,7 @@ public class EvalExpressions implements Transform {
     private void evalStylesheet(Stylesheet stylesheet) {
         scopeManager.enterScope();
         stylesheet.getChildren().forEach(astNode -> {
-            if (astNode instanceof VariableAssignment) expressionChecker.check(astNode);
+            if (astNode instanceof VariableAssignment) expressionChecker.check(astNode, scopeManager);
             else evalStylerule((Stylerule) astNode);
         });
         scopeManager.exitScope();
@@ -41,7 +33,7 @@ public class EvalExpressions implements Transform {
         stylerule.getChildren().forEach(astNode -> {
             if(astNode instanceof IfClause) evalIfClause((IfClause) astNode);
             else if(astNode instanceof ElseClause) evalElseClause((ElseClause) astNode);
-            else if(astNode instanceof VariableAssignment | astNode instanceof Declaration) expressionChecker.check(astNode);
+            else if(astNode instanceof VariableAssignment | astNode instanceof Declaration) expressionChecker.check(astNode, scopeManager);
         });
         scopeManager.exitScope();
     }
@@ -51,7 +43,7 @@ public class EvalExpressions implements Transform {
         ifClause.getChildren().forEach(astNode -> {
             if(astNode instanceof IfClause) evalIfClause((IfClause) astNode);
             else if(astNode instanceof ElseClause) evalElseClause((ElseClause) astNode);
-            else expressionChecker.check(astNode);
+            else if(astNode instanceof VariableAssignment | astNode instanceof Declaration) expressionChecker.check(astNode, scopeManager);
         });
         scopeManager.exitScope();
     }
@@ -61,7 +53,7 @@ public class EvalExpressions implements Transform {
         elseClause.getChildren().forEach(astNode -> {
             if(astNode instanceof IfClause) evalIfClause((IfClause) astNode);
             else if(astNode instanceof ElseClause) evalElseClause((ElseClause) astNode);
-            else if(astNode instanceof VariableAssignment | astNode instanceof Declaration) expressionChecker.check(astNode);
+            else if(astNode instanceof VariableAssignment | astNode instanceof Declaration) expressionChecker.check(astNode, scopeManager);
         });
         scopeManager.exitScope();
     }
